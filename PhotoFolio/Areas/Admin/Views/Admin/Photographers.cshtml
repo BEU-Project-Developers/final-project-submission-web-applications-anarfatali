@@ -1,0 +1,525 @@
+﻿@model dynamic
+
+@{
+    Layout = "AdminPanelLayout";
+}
+<!-- Main Content -->
+<div class="col py-3 main-content">
+    <!-- Header -->
+    <div class="header mb-4">
+        <div class="row align-items-center">
+            <div class="col">
+                <h1 class="h3">Photographers Management</h1>
+                <p class="text-muted">Manage all verified photographers</p>
+            </div>
+            <div class="col-auto">
+                <div class="btn-group">
+                    <button class="btn btn-primary">
+                        <i class="bi bi-person-plus"></i> Add Photographer
+                    </button>
+                    <button class="btn btn-outline-primary">
+                        <i class="bi bi-envelope"></i> Email All
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row stats-cards">
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="card-title text-muted mb-0">Total Photographers</h5>
+                            <span class="h2 font-weight-bold mb-0">214</span>
+                        </div>
+                        <div class="col-auto">
+                            <div class="icon-shape bg-primary text-white rounded-circle shadow">
+                                <i class="bi bi-camera"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-3 mb-0 text-muted text-sm">
+                        <span class="text-success mr-2"><i class="bi bi-arrow-up"></i> 3.48%</span>
+                        <span class="text-nowrap">Since last month</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="card-title text-muted mb-0">Active Photographers</h5>
+                            <span class="h2 font-weight-bold mb-0">189</span>
+                        </div>
+                        <div class="col-auto">
+                            <div class="icon-shape bg-success text-white rounded-circle shadow">
+                                <i class="bi bi-person-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-3 mb-0 text-muted text-sm">
+                        <span class="text-success mr-2"><i class="bi bi-arrow-up"></i> 1.8%</span>
+                        <span class="text-nowrap">Since last week</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="card-title text-muted mb-0">Photos Uploaded</h5>
+                            <span class="h2 font-weight-bold mb-0">15,742</span>
+                        </div>
+                        <div class="col-auto">
+                            <div class="icon-shape bg-info text-white rounded-circle shadow">
+                                <i class="bi bi-images"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-3 mb-0 text-muted text-sm">
+                        <span class="text-success mr-2"><i class="bi bi-arrow-up"></i> 8.3%</span>
+                        <span class="text-nowrap">Since last week</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="card-title text-muted mb-0">Pending Requests</h5>
+                            <span class="h2 font-weight-bold mb-0">12</span>
+                        </div>
+                        <div class="col-auto">
+                            <div class="icon-shape bg-warning text-white rounded-circle shadow">
+                                <i class="bi bi-hourglass-split"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-3 mb-0 text-muted text-sm">
+                        <span class="text-danger mr-2"><i class="bi bi-arrow-up"></i> 5 new</span>
+                        <span class="text-nowrap">Since last login</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <select class="form-select">
+                        <option selected>All Status</option>
+                        <option>Active</option>
+                        <option>Inactive</option>
+                        <option>Suspended</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select">
+                        <option selected>All Experience</option>
+                        <option>0-2 years</option>
+                        <option>3-5 years</option>
+                        <option>5+ years</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select">
+                        <option selected>Sort By</option>
+                        <option>Name (A-Z)</option>
+                        <option>Name (Z-A)</option>
+                        <option>Most Photos</option>
+                        <option>Newest</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search photographers...">
+                        <button class="btn btn-primary" type="button">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Photographers Table -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                    <tr>
+                        <th>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="selectAll">
+                                <label class="form-check-label" for="selectAll"></label>
+                            </div>
+                        </th>
+                        <th>Photographer</th>
+                        <th>Email</th>
+                        <th>Experience</th>
+                        <th>Photos</th>
+                        <th>Status</th>
+                        <th>Joined Date</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="User">
+                                <div>
+                                    <h6 class="mb-0">Michael Wilson</h6>
+                                    <small class="text-muted">ID: #12349</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>michael.wilson@example.com</td>
+                        <td>5 years</td>
+                        <td>
+                            <span class="badge bg-primary rounded-pill">248</span>
+                        </td>
+                        <td><span class="badge bg-success">Active</span></td>
+                        <td>Feb 18, 2023</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                                        data-bs-toggle="dropdown">
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-eye me-2"></i>View Profile</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-images me-2"></i>View
+                                            Photos</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-pencil me-2"></i>Edit Details</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-envelope me-2"></i>Contact</a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item text-warning" href="#"><i
+                                                class="bi bi-pause-circle me-2"></i>Suspend</a></li>
+                                    <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-trash me-2"></i>Delete</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="User">
+                                <div>
+                                    <h6 class="mb-0">Jane Smith</h6>
+                                    <small class="text-muted">ID: #12346</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>jane.smith@example.com</td>
+                        <td>7 years</td>
+                        <td>
+                            <span class="badge bg-primary rounded-pill">412</span>
+                        </td>
+                        <td><span class="badge bg-success">Active</span></td>
+                        <td>Dec 10, 2022</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                                        data-bs-toggle="dropdown">
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-eye me-2"></i>View Profile</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-images me-2"></i>View
+                                            Photos</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-pencil me-2"></i>Edit Details</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-envelope me-2"></i>Contact</a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item text-warning" href="#"><i
+                                                class="bi bi-pause-circle me-2"></i>Suspend</a></li>
+                                    <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-trash me-2"></i>Delete</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="User">
+                                <div>
+                                    <h6 class="mb-0">Thomas Anderson</h6>
+                                    <small class="text-muted">ID: #23459</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>thomas.anderson@example.com</td>
+                        <td>7 years</td>
+                        <td>
+                            <span class="badge bg-primary rounded-pill">156</span>
+                        </td>
+                        <td><span class="badge bg-success">Active</span></td>
+                        <td>May 12, 2023</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                                        data-bs-toggle="dropdown">
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-eye me-2"></i>View Profile</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-images me-2"></i>View
+                                            Photos</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-pencil me-2"></i>Edit Details</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-envelope me-2"></i>Contact</a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item text-warning" href="#"><i
+                                                class="bi bi-pause-circle me-2"></i>Suspend</a></li>
+                                    <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-trash me-2"></i>Delete</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="User">
+                                <div>
+                                    <h6 class="mb-0">Sarah Thompson</h6>
+                                    <small class="text-muted">ID: #23456</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>sarah.thompson@example.com</td>
+                        <td>3 years</td>
+                        <td>
+                            <span class="badge bg-primary rounded-pill">87</span>
+                        </td>
+                        <td><span class="badge bg-warning text-dark">Inactive</span></td>
+                        <td>Apr 15, 2023</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                                        data-bs-toggle="dropdown">
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-eye me-2"></i>View Profile</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-images me-2"></i>View
+                                            Photos</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-pencil me-2"></i>Edit Details</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-envelope me-2"></i>Contact</a>
+                                    </li>
+                                    <li><a class="dropdown-item text-success" href="#"><i
+                                                class="bi bi-check-circle me-2"></i>Activate</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-trash me-2"></i>Delete</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="User">
+                                <div>
+                                    <h6 class="mb-0">David Brown</h6>
+                                    <small class="text-muted">ID: #23457</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>david.brown@example.com</td>
+                        <td>5 years</td>
+                        <td>
+                            <span class="badge bg-primary rounded-pill">203</span>
+                        </td>
+                        <td><span class="badge bg-danger">Suspended</span></td>
+                        <td>Jan 30, 2023</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                                        data-bs-toggle="dropdown">
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-eye me-2"></i>View Profile</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-images me-2"></i>View
+                                            Photos</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-pencil me-2"></i>Edit Details</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-envelope me-2"></i>Contact</a>
+                                    </li>
+                                    <li><a class="dropdown-item text-success" href="#"><i
+                                                class="bi bi-check-circle me-2"></i>Activate</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-trash me-2"></i>Delete</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-white">
+            <div class="row align-items-center">
+                <div class="col">
+                    <p class="mb-0 text-muted">Showing 1 to 5 of 214 photographers</p>
+                </div>
+                <div class="col-auto">
+                    <nav>
+                        <ul class="pagination justify-content-center mb-0">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Previous</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Approval Requests -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">Pending Photographer Approval Requests</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                    <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Experience</th>
+                        <th>Portfolio</th>
+                        <th>Submitted</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="User">
+                                <div>
+                                    <h6 class="mb-0">Jessica Miller</h6>
+                                    <small class="text-muted">ID: #23458</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>jessica.miller@example.com</td>
+                        <td>2 years</td>
+                        <td><a href="#" class="text-primary">View Portfolio</a></td>
+                        <td>Yesterday, 11:15 AM</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" class="btn btn-success">
+                                    <i class="bi bi-check-lg"></i> Approve
+                                </button>
+                                <button type="button" class="btn btn-danger">
+                                    <i class="bi bi-x-lg"></i> Reject
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="User">
+                                <div>
+                                    <h6 class="mb-0">Alex Johnson</h6>
+                                    <small class="text-muted">ID: #23461</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>alex.johnson@example.com</td>
+                        <td>4 years</td>
+                        <td><a href="#" class="text-primary">View Portfolio</a></td>
+                        <td>Today, 8:30 AM</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" class="btn btn-success">
+                                    <i class="bi bi-check-lg"></i> Approve
+                                </button>
+                                <button type="button" class="btn btn-danger">
+                                    <i class="bi bi-x-lg"></i> Reject
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-white">
+            <a href="#" class="text-primary">View all pending requests (12)</a>
+        </div>
+    </div>
+</div>

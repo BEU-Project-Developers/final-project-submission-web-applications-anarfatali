@@ -1,0 +1,183 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Index - PhotoFolio Bootstrap Template</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <!-- Favicons -->
+    <link href="~/assets/img/favicon.png" rel="icon">
+    <link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Cardo:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="~/assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="~/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="~/assets/css/main.css" rel="stylesheet">
+
+    <!-- =======================================================
+    * Template Name: PhotoFolio
+    * Template URL: https://bootstrapmade.com/photofolio-bootstrap-photography-website-template/
+    * Updated: Aug 07 2024 with Bootstrap v5.3.3
+    * Author: BootstrapMade.com
+    * License: https://bootstrapmade.com/license/
+    ======================================================== -->
+</head>
+<body>
+<header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container-fluid position-relative d-flex align-items-center justify-content-between">
+
+        <a asp-controller="Home" asp-action="Index" class="logo d-flex align-items-center me-auto me-xl-0">
+            <i class="bi bi-camera"></i>
+            <h1 class="sitename">PhotoFolio</h1>
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+            <ul>
+                <li><a asp-controller="Home"
+                       class="nav-link @(ViewData["ActivePage"]?.ToString() == "Home" ? "active" : "")"
+                       asp-action="Index">Home<br></a></li>
+                <li><a asp-controller="Home"
+                       class="nav-link @(ViewData["ActivePage"]?.ToString() == "About" ? "active" : "")"
+                       asp-action="About">About</a></li>
+                <li class="dropdown"><a asp-controller="Home"
+                                        class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
+                                        asp-action="Gallery"><span>Gallery</span> <i
+                            class="bi bi-chevron-down toggle-dropdown"></i></a>
+                    <ul>
+                        <li><a asp-controller="Home"
+                               class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
+                               asp-action="Gallery">Nature</a></li>
+                        <li><a asp-controller="Home"
+                               class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
+                               asp-action="Gallery">People</a></li>
+                        <li><a asp-controller="Home"
+                               class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
+                               asp-action="Gallery">Architecture</a></li>
+                        <li><a asp-controller="Home"
+                               class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
+                               asp-action="Gallery">Animals</a></li>
+                        <li><a asp-controller="Home"
+                               class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
+                               asp-action="Gallery">Sports</a></li>
+                        <li><a asp-controller="Home"
+                               class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
+                               asp-action="Gallery">Travel</a></li>
+                        @* @if (User.Identity.IsAuthenticated && User.IsInRole("Photographer")) *@
+                        @* { *@
+                        <a asp-controller="Photo" asp-action="Upload" class="btn btn-success ms-3">
+                            <i class="bi bi-upload me-1"></i> Upload Photo
+                        </a>
+                        @* } *@
+
+                    </ul>
+                </li>
+                <li><a asp-controller="Home"
+                       class="nav-link @(ViewData["ActivePage"]?.ToString() == "Services" ? "active" : "")"
+                       asp-action="Services">Services</a></li>
+                <li><a asp-controller="Home"
+                       class="nav-link @(ViewData["ActivePage"]?.ToString() == "Contact" ? "active" : "")"
+                       asp-action="Contact">Contact</a></li>
+            </ul>
+            <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+        <nav class="navbar navbar-expand-lg navbar-dark">
+
+            <div class="ms-auto d-flex align-items-center">
+                @* @if (User.Identity.IsAuthenticated) *@
+                @* { *@
+                <div class="nav-item dropdown ms-1"> <!-- Changed from <li> to <div> -->
+                    <a class="nav-link p-0 d-flex align-items-center" href="#" id="userDropdown"
+                       role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div
+                            class="user-avatar border border-light rounded-circle overflow-hidden d-flex align-items-center justify-content-center">
+                            <img src="~/assets/img/profile.jpg" alt="Avatar" class="img-fluid"/>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark mt-2" aria-labelledby="userDropdown"
+                        style="min-width: 200px;">
+                        <!-- mence yaxsidi o logonun arxasindaki boz hisse pis gorsenire -->
+                        <li class="px-3 py-2 text-white"><strong>@User.Identity.Name Test name</strong></li>
+                        <li><a class="dropdown-item mb-1" asp-controller="Account" asp-action="Profile">Profile</a>
+                        </li>
+                        <li>
+                            <form asp-controller="Account" asp-action="Login" class="px-3">
+                                <button type="submit" class="btn btn-sm btn-outline-light w-100">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div> <!-- Changed from </li> to </div> -->
+                @* } *@
+            </div>
+        </nav>
+
+    </div>
+</header>
+
+<main class="main">
+    @RenderBody()
+</main>
+
+<footer id="footer" class="footer">
+
+    <div class="container">
+        <div class="copyright text-center ">
+            <p>© <span>Copyright</span> <strong class="px-1 sitename">PhotoFolio</strong>
+                <span>All Rights Reserved</span></p>
+        </div>
+        <div class="social-links d-flex justify-content-center">
+            <a href=""><i class="bi bi-twitter-x"></i></a>
+            <a href=""><i class="bi bi-facebook"></i></a>
+            <a href=""><i class="bi bi-instagram"></i></a>
+            <a href=""><i class="bi bi-linkedin"></i></a>
+        </div>
+        <div class="credits">
+            <!-- All the links in the footer should remain intact. -->
+            <!-- You can delete the links only if you've purchased the pro version. -->
+            <!-- Licensing information: https://bootstrapmade.com/license/ -->
+            <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+            Designed by
+            <p>Anar
+                <Fataliyev></Fataliyev>
+            </p>
+        </div>
+    </div>
+
+</footer>
+@await RenderSectionAsync("Scripts", required: false)
+
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+        class="bi bi-arrow-up-short"></i></a>
+
+<!-- Preloader -->
+<div id="preloader">
+    <div class="line"></div>
+</div>
+
+<!-- Vendor JS Files -->
+<script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/assets/vendor/php-email-form/validate.js"></script>
+<script src="~/assets/vendor/aos/aos.js"></script>
+<script src="~/assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="~/assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+<!-- Main JS File -->
+<script src="~/assets/js/main.js"></script>
+</body>
+</html>

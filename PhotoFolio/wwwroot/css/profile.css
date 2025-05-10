@@ -1,0 +1,46 @@
+﻿:root {
+    --bs-success: #2e8b57;
+    --bs-success-rgb: 46, 139, 87;
+    --bs-success-hover: #267349;
+}
+
+.btn-success {
+    background-color: var(--bs-success);
+    border-color: var(--bs-success);
+}
+
+.btn-success:hover,
+.btn-success:active,
+.btn-success:focus {
+    background-color: var(--bs-success-hover) !important;
+    border-color: var(--bs-success-hover) !important;
+}
+
+.bg-success {
+    background-color: var(--bs-success) !important;
+}
+
+.text-success {
+    color: var(--bs-success) !important;
+}
+
+.form-control:focus {
+    border-color: var(--bs-success);
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-success-rgb), 0.25);
+}
+
+.min-vh-100 {
+    min-height: 100vh;
+}
+
+.invalid-feedback {
+    display: none;
+}
+
+.form-control:invalid ~ .invalid-feedback {
+    display: block;
+}
+
+.form-control:invalid {
+    border-color: #dc3545;
+}
