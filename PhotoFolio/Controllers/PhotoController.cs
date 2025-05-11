@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PhotoFolio.Models;
+using PhotoFolio.ViewModels;
 
 namespace PhotoFolio.Controllers;
 
@@ -29,10 +30,9 @@ public class PhotoController : Controller
         return RedirectToAction("Index", "Home");
     }
 
+    [HttpGet]
     public IActionResult Request()
     {
         return View();
     }
-
-    
 }

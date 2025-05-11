@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PhotoFolio.Models;
+using PhotoFolio.ViewModels;
 
-namespace PhotoFolio.Controllers;
+namespace PhotoFolio.Areas.Admin.Controllers;
 
 [Area("Admin")]
 // [Authorize(Roles = "Admin")]

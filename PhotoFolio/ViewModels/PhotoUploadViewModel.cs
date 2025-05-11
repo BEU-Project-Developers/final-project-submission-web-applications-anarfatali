@@ -1,4 +1,4 @@
-﻿namespace PhotoFolio.Models;
+﻿namespace PhotoFolio.ViewModels;
 
 public class PhotoUploadViewModel
 {

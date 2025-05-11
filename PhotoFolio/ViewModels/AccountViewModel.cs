@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PhotoFolio.Models;
+namespace PhotoFolio.ViewModels;
 
 public class AccountViewModel
 {
