@@ -83,21 +83,25 @@ public class AdminController : Controller
             }
         };
 
+        ViewData["ActivePage"] = "Dashboard";
         return View(vm);
     }
     
     public IActionResult PhotoGallery()
     {
+        ViewData["ActivePage"] = "Photo Gallery";
         return View();
     }
 
     public IActionResult Users()
     {
+        ViewData["ActivePage"] = "Users";
         return View();
     }
 
     public IActionResult Photographers()
     {
+        ViewData["ActivePage"] = "Photographers";
         return View();
     }
 }
