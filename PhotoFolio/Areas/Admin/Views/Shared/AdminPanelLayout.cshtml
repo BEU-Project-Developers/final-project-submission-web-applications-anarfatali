@@ -30,22 +30,22 @@
                 </a>
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                     <li class="nav-item">
-                        <a asp-controller="Admin" asp-area="Admin" class="nav-link align-middle px-0">
+                        <a asp-controller="Admin" asp-area="Admin" class="nav-link align-middle px-0 @(ViewData["ActivePage"] == "Dashboard" ? "active" : "")">
                             <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Dashboard</span>
                         </a>
                     </li>
                     <li>
-                        <a asp-controller="Admin" asp-action="Users" class="nav-link px-0 align-middle">
+                        <a asp-controller="Admin" asp-action="Users" class="nav-link px-0 align-middle @(ViewData["ActivePage"] == "Users" ? "active" : "")">
                             <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Users</span>
                         </a>
                     </li>
                     <li>
-                        <a asp-controller="Admin" asp-action="Photographers" class="nav-link px-0 align-middle">
+                        <a asp-controller="Admin" asp-action="Photographers" class="nav-link px-0 align-middle @(ViewData["ActivePage"] == "Photographers" ? "active" : "")">
                             <i class="fs-4 bi-camera"></i> <span class="ms-1 d-none d-sm-inline">Photographers</span>
                         </a>
                     </li>
                     <li>
-                        <a asp-controller="Admin" asp-action="PhotoGallery" class="nav-link px-0 align-middle">
+                        <a asp-controller="Admin" asp-action="PhotoGallery" class="nav-link px-0 align-middle @(ViewData["ActivePage"] == "Photo Gallery" ? "active" : "")">
                             <i class="fs-4 bi-image"></i> <span class="ms-1 d-none d-sm-inline">Photo Gallery</span>
                         </a>
                     </li>
