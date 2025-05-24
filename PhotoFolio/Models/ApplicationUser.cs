@@ -11,6 +11,5 @@ public class ApplicationUser : IdentityUser
     public ICollection<Photo>? Photos { get; set; }
     public ICollection<Gallery>? Galleries { get; set; }
     public ICollection<Feedback>? Feedbacks { get; set; }
-    public ICollection<Favorite>? Favorites { get; set; }
     public ICollection<ContactMessage>? ContactMessages { get; set; }
 }

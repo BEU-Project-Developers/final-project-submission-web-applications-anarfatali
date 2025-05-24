@@ -12,9 +12,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Gallery> Galleries { get; set; }
     public DbSet<PhotoAlbumItem> PhotoAlbumItems { get; set; }
     public DbSet<Feedback> Feedbacks { get; set; }
-    public DbSet<Tag> Tags { get; set; }
-    public DbSet<PhotoTag> PhotoTags { get; set; }
-    public DbSet<Favorite> Favorites { get; set; }
     public DbSet<ContactMessage> ContactMessages { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -27,7 +24,5 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         base.OnModelCreating(builder);
 
         builder.Entity<PhotoAlbumItem>().HasKey(x => new { x.GalleryId, x.PhotoId });
-        builder.Entity<PhotoTag>().HasKey(x => new { x.PhotoId, x.TagId });
-        builder.Entity<Favorite>().HasKey(x => new { x.PhotoId, x.UserId });
     }
 }

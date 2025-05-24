@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;    
 using PhotoFolio.Models;
 using PhotoFolio.ViewModels;
 
@@ -16,7 +16,7 @@ namespace PhotoFolio.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Login(AccountViewModel vm)
         {
-            if (vm.Username == "anar@gmail.com" && vm.Password == "1234" && ModelState.IsValid)
+            if (vm.Username == "anar@gmail.com" && vm.Password == "1234")
                 return RedirectToAction("Index", "Home");
 
             ModelState.AddModelError("error", "Wrong username or password.");
