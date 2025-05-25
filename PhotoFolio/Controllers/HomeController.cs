@@ -37,9 +37,4 @@ public class HomeController : Controller
         ViewData["ActivePage"] = "Contact";
         return View();
     }
-    public IActionResult GallerySingle()
-    {
-        ViewData["ActivePage"] = "GallerySingle";
-        return View();
-    }
 }

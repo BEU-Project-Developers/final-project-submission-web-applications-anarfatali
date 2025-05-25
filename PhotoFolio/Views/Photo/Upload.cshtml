@@ -34,7 +34,8 @@
                             <div class="col-md-5">
                                 <div class="upload-info p-4 p-md-5">
                                     <h3 class="mb-4">Upload Photos</h3>
-                                    <p>Share your best moments with the world. Upload high-quality images to your gallery.</p>
+                                    <p>Share your best moments with the world. Upload high-quality images to your
+                                        gallery.</p>
 
                                     <div class="upload-features">
                                         <div class="feature">
@@ -57,15 +58,15 @@
                                             </div>
                                         </div>
 
-                                        <div class="feature">
-                                            <div class="feature-icon">
-                                                <i class="bi bi-collection"></i>
-                                            </div>
-                                            <div class="feature-text">
-                                                <h5>Organize</h5>
-                                                <p>Create albums and collections</p>
-                                            </div>
-                                        </div>
+                                        @* <div class="feature"> *@
+                                        @*     <div class="feature-icon"> *@
+                                        @*         <i class="bi bi-collection"></i> *@
+                                        @*     </div> *@
+                                        @*     $1$ <div class="feature-text"> #1# *@
+                                        @*     $1$     <h5>Organize</h5> #1# *@
+                                        @*     $1$     <p>Create albums and collections</p> #1# *@
+                                        @*     $1$ </div> #1# *@
+                                        @* </div> *@
                                     </div>
                                 </div>
                             </div>
@@ -91,7 +92,8 @@
                                             <span id="progress-percentage">0%</span>
                                         </div>
                                         <div class="progress" style="height: 10px;">
-                                            <div class="progress-bar progress-bar-striped progress-bar-animated" id="progress-bar" role="progressbar" style="width: 0%"></div>
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                                 id="progress-bar" role="progressbar" style="width: 0%"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -107,9 +109,9 @@
                     <h3 class="mb-0">Your Photos</h3>
                     <div class="gallery-actions">
                         <div class="btn-group">
-                            <button class="btn btn-outline-primary active">All</button>
-                            <button class="btn btn-outline-primary">Recent</button>
-                            <button class="btn btn-outline-primary">Favorites</button>
+                            @* <button class="btn btn-outline-primary active">All</button> *@
+                            @* <button class="btn btn-outline-primary">Recent</button> *@
+                            @* <button class="btn btn-outline-primary">Favorites</button> *@
                         </div>
                     </div>
                 </div>
@@ -118,10 +120,11 @@
                     <!-- Sample Photos -->
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="gallery-item">
-                            <img src="https://source.unsplash.com/random/600x600?nature=1" alt="Nature" class="img-fluid">
+                            <img src="https://source.unsplash.com/random/600x600?nature=1" alt="Nature"
+                                 class="img-fluid">
                             <div class="gallery-overlay">
                                 <div class="gallery-actions">
-                                    <button class="action-btn"><i class="bi bi-heart"></i></button>
+                                    @* <button class="action-btn"><i class="bi bi-heart"></i></button> *@
                                     <button class="action-btn"><i class="bi bi-zoom-in"></i></button>
                                     <button class="action-btn"><i class="bi bi-trash"></i></button>
                                 </div>
@@ -152,7 +155,8 @@
 
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="gallery-item">
-                            <img src="https://source.unsplash.com/random/600x600?mountain=1" alt="Mountain" class="img-fluid">
+                            <img src="https://source.unsplash.com/random/600x600?mountain=1" alt="Mountain"
+                                 class="img-fluid">
                             <div class="gallery-overlay">
                                 <div class="gallery-actions">
                                     <button class="action-btn"><i class="bi bi-heart"></i></button>
@@ -203,7 +207,8 @@
 
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="gallery-item">
-                            <img src="https://source.unsplash.com/random/600x600?travel=1" alt="Travel" class="img-fluid">
+                            <img src="https://source.unsplash.com/random/600x600?travel=1" alt="Travel"
+                                 class="img-fluid">
                             <div class="gallery-overlay">
                                 <div class="gallery-actions">
                                     <button class="action-btn"><i class="bi bi-heart"></i></button>
@@ -220,7 +225,8 @@
 
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="gallery-item">
-                            <img src="https://source.unsplash.com/random/600x600?animal=1" alt="Animal" class="img-fluid">
+                            <img src="https://source.unsplash.com/random/600x600?animal=1" alt="Animal"
+                                 class="img-fluid">
                             <div class="gallery-overlay">
                                 <div class="gallery-actions">
                                     <button class="action-btn"><i class="bi bi-heart"></i></button>
@@ -237,7 +243,8 @@
 
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="gallery-item">
-                            <img src="https://source.unsplash.com/random/600x600?flower=1" alt="Flower" class="img-fluid">
+                            <img src="https://source.unsplash.com/random/600x600?flower=1" alt="Flower"
+                                 class="img-fluid">
                             <div class="gallery-overlay">
                                 <div class="gallery-actions">
                                     <button class="action-btn"><i class="bi bi-heart"></i></button>
@@ -266,7 +273,7 @@
 
 <!-- Simple upload simulation script -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const dropzone = document.getElementById('dropzone');
         const fileInput = document.getElementById('file-input');
         const browseBtn = document.getElementById('browse-btn');
@@ -275,28 +282,28 @@
         const progressPercentage = document.getElementById('progress-percentage');
 
         // Open file dialog when browse button is clicked
-        browseBtn.addEventListener('click', function() {
+        browseBtn.addEventListener('click', function () {
             fileInput.click();
         });
 
         // Handle file selection
-        fileInput.addEventListener('change', function() {
+        fileInput.addEventListener('change', function () {
             if (this.files.length > 0) {
                 simulateUpload();
             }
         });
 
         // Handle drag and drop
-        dropzone.addEventListener('dragover', function(e) {
+        dropzone.addEventListener('dragover', function (e) {
             e.preventDefault();
             dropzone.classList.add('dragover');
         });
 
-        dropzone.addEventListener('dragleave', function() {
+        dropzone.addEventListener('dragleave', function () {
             dropzone.classList.remove('dragover');
         });
 
-        dropzone.addEventListener('drop', function(e) {
+        dropzone.addEventListener('drop', function (e) {
             e.preventDefault();
             dropzone.classList.remove('dragover');
 
@@ -311,7 +318,7 @@
             uploadProgress.classList.remove('d-none');
             let progress = 0;
 
-            const interval = setInterval(function() {
+            const interval = setInterval(function () {
                 progress += Math.random() * 10;
                 if (progress > 100) progress = 100;
 
@@ -320,7 +327,7 @@
 
                 if (progress === 100) {
                     clearInterval(interval);
-                    setTimeout(function() {
+                    setTimeout(function () {
                         uploadProgress.classList.add('d-none');
                         alert('Upload complete! Your photos have been added to the gallery.');
                         // In a real app, you would add the new images to the gallery here
