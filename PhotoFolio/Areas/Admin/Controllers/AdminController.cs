@@ -28,31 +28,26 @@ public class AdminController : Controller
                 new ActiveUserDto
                 {
                     Id = 12345, FullName = "John Doe", Email = "john.doe@example.com", Role = "User", Status = "Active",
-                    LastActiveDisplay = "Just now"
                 },
                 new ActiveUserDto
                 {
                     Id = 12346, FullName = "Jane Smith", Email = "jane.smith@example.com", Role = "Photographer", Status = "Active",
-                    LastActiveDisplay = "5 minutes ago"
                 },
                 new ActiveUserDto
                 {
                     Id = 12347, FullName = "Robert Johnson", Email = "robert.johnson@example.com", Role = "User", Status = "Active",
-                    LastActiveDisplay = "15 minutes ago"
                 },
                 new ActiveUserDto
                 {
                     Id = 12348, FullName = "Emily Davis", Email = "emily.davis@example.com", Role = "User", Status = "Idle",
-                    LastActiveDisplay = "1 hour ago"
                 },
                 new ActiveUserDto
                 {
                     Id = 12349, FullName = "Michael Wilson", Email = "michael.wilson@example.com", Role = "Photographer",
-                    Status = "Active", LastActiveDisplay = "2 hours ago"
+                    Status = "Active"
                 },
             },
 
-            // Photographer Approval Requests üçün nümunə siyahı
             PhotographerRequests = new List<PhotographerRequestDto>
             {
                 new PhotographerRequestDto
@@ -86,7 +81,7 @@ public class AdminController : Controller
         ViewData["ActivePage"] = "Dashboard";
         return View(vm);
     }
-    
+
     public IActionResult PhotoGallery()
     {
         ViewData["ActivePage"] = "Photo Gallery";

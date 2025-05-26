@@ -6,7 +6,7 @@ using PhotoFolio.ViewModels;
 
 namespace PhotoFolio.Controllers;
 
-// [Authorize(Roles = "Photographer")]
+[Authorize(Roles = "Photographer")]
 public class PhotoController : Controller
 {
     private readonly IWebHostEnvironment _webHostEnvironment;

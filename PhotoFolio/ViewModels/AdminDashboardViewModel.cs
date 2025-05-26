@@ -10,7 +10,6 @@ public class AdminDashboardViewModel
 
     public List<ActiveUserDto> ActiveUsersList { get; set; } = new();
 
-    // Photographer Approval Requests üçün satırlar
     public List<PhotographerRequestDto> PhotographerRequests { get; set; } = new();
 }
 
@@ -21,10 +20,8 @@ public class ActiveUserDto
     public string Email { get; set; } = "";
     public string Role { get; set; } = "";
     public string Status { get; set; } = ""; // e.g. "Active", "Idle"
-    public string LastActiveDisplay { get; set; } = ""; // e.g. "5 minutes ago"
 }
 
-// Photographer Approval Requests cədvəli üçün DTO
 public class PhotographerRequestDto
 {
     public int Id { get; set; }

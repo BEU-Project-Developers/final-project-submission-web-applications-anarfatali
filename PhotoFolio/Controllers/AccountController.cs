@@ -1,5 +1,4 @@
-using Microsoft.AspNetCore.Mvc;    
-using PhotoFolio.Models;
+using Microsoft.AspNetCore.Mvc;
 using PhotoFolio.ViewModels;
 
 namespace PhotoFolio.Controllers
