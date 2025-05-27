@@ -2,12 +2,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PhotoFolio.DATA;
 using PhotoFolio.Models;
+using PhotoFolio.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+
+builder.Services.AddScoped<IGalleryService, GalleryService>();
 
 // 2) Add Identity
 // builder.Services.AddIdentity<ApplicationUser, IdentityRole>()

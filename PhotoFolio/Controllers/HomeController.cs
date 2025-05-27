@@ -1,20 +1,29 @@
 using Microsoft.AspNetCore.Mvc;
+using PhotoFolio.Services;
 
 namespace PhotoFolio.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    // private readonly ILogger<HomeController> _logger;
+    // public HomeController(ILogger<HomeController> logger)
+    // {
+    //     _logger = logger;
+    // }
+    
+    private readonly IGalleryService _galleryService;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(IGalleryService galleryService)
     {
-        _logger = logger;
+        _galleryService = galleryService;
     }
 
-    public IActionResult Index()
+
+    public async Task<IActionResult> Index()
     {
         ViewData["ActivePage"] = "Home";
-        return View();
+        var galleryItems = await _galleryService.GetGalleryItemsAsync();
+        return View(galleryItems);
     }
 
     public IActionResult About()

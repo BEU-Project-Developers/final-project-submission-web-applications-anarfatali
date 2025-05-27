@@ -21,12 +21,11 @@ public class PhotoController : Controller
     [HttpGet]
     public IActionResult Upload()
     {
-        // if (!User.IsInRole("Photographer"))
-        // {
-        //     return RedirectToAction("Request", "Photo");
-        // }
+        if (!User.IsInRole("Photographer"))
+        {
+            return RedirectToAction("Request", "Photo");
+        }
 
-        // 3) Otherwise user *is* Photographer or Admin:
         return View();
     }
 
