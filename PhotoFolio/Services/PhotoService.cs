@@ -17,6 +17,16 @@ public class PhotoService : IPhotoService
     {
         return await _context.Photos.ToListAsync();
     }
+    
+    public async Task<List<Photo>> GetPhotosByCategoryAsync(string? categoryName)
+    { 
+        IQueryable<Photo> query = _context.Photos.Include(p => p.Category);
+        if (!string.IsNullOrEmpty(categoryName) && categoryName != "All")
+        {
+            query = query.Where(p => p.Category != null && p.Category.Name == categoryName);
+        }
+        return await query.ToListAsync();
+    }
 
     public async Task<Photo> GetPhotoByIdAsync(int id)
     {

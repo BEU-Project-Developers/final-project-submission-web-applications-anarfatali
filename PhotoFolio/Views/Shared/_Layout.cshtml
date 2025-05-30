@@ -62,22 +62,22 @@
                     <ul>
                         <li><a asp-controller="Gallery"
                                class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
-                               asp-action="Index">Nature</a></li>
+                               asp-action="Index" asp-route-category="Nature">Nature</a></li>
                         <li><a asp-controller="Gallery"
                                class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
-                               asp-action="Index">People</a></li>
+                               asp-action="Index" asp-route-category="People">People</a></li>
                         <li><a asp-controller="Gallery"
                                class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
-                               asp-action="Index">Architecture</a></li>
+                               asp-action="Index" asp-route-category="Architecture">Architecture</a></li>
                         <li><a asp-controller="Gallery"
                                class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
-                               asp-action="Index">Animals</a></li>
+                               asp-action="Index" asp-route-category="Animals">Animals</a></li>
                         <li><a asp-controller="Gallery"
                                class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
-                               asp-action="Index">Sports</a></li>
+                               asp-action="Index" asp-route-category="Sports">Sports</a></li>
                         <li><a asp-controller="Gallery"
                                class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
-                               asp-action="Index">Travel</a></li>
+                               asp-action="Index" asp-route-category="Travel">Travel</a></li>
                         @* @if (User.Identity.IsAuthenticated && User.IsInRole("Photographer")) *@
                         @* { *@
                         <a asp-controller="Photo" asp-action="Upload" class="btn btn-success ms-3">

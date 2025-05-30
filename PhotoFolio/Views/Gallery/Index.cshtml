@@ -1,54 +1,64 @@
-﻿@model List<Photo>
+﻿@model PhotoFolio.ViewModels.GalleryViewModel
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Gallery";
     Layout = "_Layout";
 }
 
-<!-- Page Title -->
-<div class="page-title" data-aos="fade">
-    <div class="heading">
-        <div class="container">
-            <div class="row d-flex justify-content-center text-center">
-                <div class="col-lg-8">
-                    <h1>Gallery</h1>
-                    <p class="mb-0">Explore stunning images by different categories.</p>
-                    <a asp-controller="Contact" asp-action="Index" class="cta-btn">CONTACT US<br></a>
-                </div>
+
+<!-- Category Dropdown -->
+<div class="container mt-4">
+    <form method="get" asp-action="Index" asp-controller="Gallery" class="mb-3">
+        <div class="row">
+            <div class="col-md-4">
+                <select name="category" class="form-select" onchange="this.form.submit()">
+                    <option value="">All</option>
+                    @foreach (var cat in Model.Categories)
+                    {
+                        if (Model.SelectedCategory == cat.Name)
+                        {
+                            <option value="@cat.Name" selected>@cat.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@cat.Name">@cat.Name</option>
+                        }
+                    }
+                </select>
             </div>
         </div>
-    </div>
-    <nav class="breadcrumbs">
-        <div class="container">
-            <ol>
-                <li><a asp-controller="Gallery" asp-action="Index">Gallery</a></li>
-                <li class="current">Index</li>
-            </ol>
-        </div>
-    </nav>
-</div><!-- End Page Title -->
+    </form>
+</div>
+
+<!-- Gallery Section (qalan hissə eyni qalır) -->
+
 
 <!-- Gallery Section -->
 <section id="gallery" class="gallery section">
     <div class="container-fluid" data-aos="fade-up" data-aos-delay="100">
         <div class="row gy-4 justify-content-center">
-
-
-            @foreach (var photo in Model)
+            @if (!Model.Photos.Any())
             {
-                <div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="gallery-item h-100">
-                        <img src="@photo.Url" class="img-fluid" alt=""/>
-                        <div class="gallery-links d-flex align-items-center justify-content-center">
-                            <a href="@photo.Url" title="@photo.Title" class="glightbox preview-link">
-                                <i class="bi bi-arrows-angle-expand"></i>
-                            </a>
-                        </div>
-                    </div>
+                <div class="col-12">
+                    <p>No photos found for “@Model.SelectedCategory” category.</p>
                 </div>
             }
-
-
+            else
+            {
+                @foreach (var photo in Model.Photos)
+                {
+                    <div class="col-xl-3 col-lg-4 col-md-6">
+                        <div class="gallery-item h-100">
+                            <img src="@photo.Url" class="img-fluid" alt="" />
+                            <div class="gallery-links d-flex align-items-center justify-content-center">
+                                <a href="@photo.Url" title="@photo.Title" class="glightbox preview-link">
+                                    <i class="bi bi-arrows-angle-expand"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
         </div>
     </div>
 </section>
