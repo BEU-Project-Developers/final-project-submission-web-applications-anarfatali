@@ -1,6 +1,12 @@
-﻿namespace PhotoFolio.Controllers.About;
+﻿using Microsoft.AspNetCore.Mvc;
 
-public class AboutController
+namespace PhotoFolio.Controllers.About;
+
+public class AboutController : Controller
 {
-    
+    public IActionResult About()
+    {
+        this.ViewData["ActivePage"] = "About";
+        return View();
+    }
 }

@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PhotoFolio.DATA;
-using PhotoFolio.Models;
 using PhotoFolio.ViewModels;
 
-namespace PhotoFolio.Controllers;
+namespace PhotoFolio.Controllers.Photo;
 
 [Authorize(Roles = "Photographer")]
 public class PhotoController : Controller
@@ -21,7 +20,7 @@ public class PhotoController : Controller
     [HttpGet]
     public IActionResult Upload()
     {
-        if (!User.IsInRole("Photographer"))
+        if (!this.User.IsInRole("Photographer"))
         {
             return RedirectToAction("Request", "Photo");
         }
@@ -43,14 +42,14 @@ public class PhotoController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Upload(PhotoUploadViewModel vm)
     {
-        if (!ModelState.IsValid)
+        if (!this.ModelState.IsValid)
         {
             return View(vm);
         }
 
         if (vm.File.Length == 0)
         {
-            ModelState.AddModelError("File", "Please select a file.");
+            this.ModelState.AddModelError("File", "Please select a file.");
             return View(vm);
         }
 
@@ -68,7 +67,7 @@ public class PhotoController : Controller
             await vm.File.CopyToAsync(fileStream);
         }
 
-        var photo = new Photo
+        var photo = new Models.Photo
         {
             FileName = uniqueFileName,
             Url = "/uploads/" + uniqueFileName,

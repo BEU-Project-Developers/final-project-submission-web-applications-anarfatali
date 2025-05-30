@@ -11,6 +11,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 );
 
 builder.Services.AddScoped<IGalleryService, GalleryService>();
+builder.Services.AddScoped<IPhotoService, PhotoService>();
 
 // 2) Add Identity
 // builder.Services.AddIdentity<ApplicationUser, IdentityRole>()

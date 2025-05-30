@@ -1,6 +1,12 @@
-﻿namespace PhotoFolio.Controllers.Contact;
+﻿using Microsoft.AspNetCore.Mvc;
 
-public class ContactController
+namespace PhotoFolio.Controllers.Contact;
+
+public class ContactController : Controller
 {
-    
+    public IActionResult Contact()
+    {
+        this.ViewData["ActivePage"] = "Contact";
+        return View();
+    }
 }

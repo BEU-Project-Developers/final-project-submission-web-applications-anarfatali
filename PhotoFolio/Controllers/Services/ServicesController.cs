@@ -1,6 +1,12 @@
-﻿namespace PhotoFolio.Controllers.Services;
+﻿using Microsoft.AspNetCore.Mvc;
 
-public class ServicesController
+namespace PhotoFolio.Controllers.Services;
+
+public class ServicesController : Controller
 {
-    
+    public IActionResult Services()
+    {
+        this.ViewData["ActivePage"] = "Services";
+        return View();
+    }
 }

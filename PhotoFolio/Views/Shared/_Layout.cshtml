@@ -52,30 +52,30 @@
                 <li><a asp-controller="Home"
                        class="nav-link @(ViewData["ActivePage"]?.ToString() == "Home" ? "active" : "")"
                        asp-action="Index">Home<br></a></li>
-                <li><a asp-controller="Home"
+                <li><a asp-controller="About"
                        class="nav-link @(ViewData["ActivePage"]?.ToString() == "About" ? "active" : "")"
                        asp-action="About">About</a></li>
-                <li class="dropdown"><a asp-controller="Home"
+                <li class="dropdown"><a asp-controller="Gallery"
                                         class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
                                         asp-action="Gallery"><span>Gallery</span> <i
                             class="bi bi-chevron-down toggle-dropdown"></i></a>
                     <ul>
-                        <li><a asp-controller="Home"
+                        <li><a asp-controller="Gallery"
                                class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
                                asp-action="Gallery">Nature</a></li>
-                        <li><a asp-controller="Home"
+                        <li><a asp-controller="Gallery"
                                class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
                                asp-action="Gallery">People</a></li>
-                        <li><a asp-controller="Home"
+                        <li><a asp-controller="Gallery"
                                class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
                                asp-action="Gallery">Architecture</a></li>
-                        <li><a asp-controller="Home"
+                        <li><a asp-controller="Gallery"
                                class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
                                asp-action="Gallery">Animals</a></li>
-                        <li><a asp-controller="Home"
+                        <li><a asp-controller="Gallery"
                                class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
                                asp-action="Gallery">Sports</a></li>
-                        <li><a asp-controller="Home"
+                        <li><a asp-controller="Gallery"
                                class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
                                asp-action="Gallery">Travel</a></li>
                         @* @if (User.Identity.IsAuthenticated && User.IsInRole("Photographer")) *@
@@ -87,10 +87,10 @@
 
                     </ul>
                 </li>
-                <li><a asp-controller="Home"
+                <li><a asp-controller="Services"
                        class="nav-link @(ViewData["ActivePage"]?.ToString() == "Services" ? "active" : "")"
                        asp-action="Services">Services</a></li>
-                <li><a asp-controller="Home"
+                <li><a asp-controller="Contact"
                        class="nav-link @(ViewData["ActivePage"]?.ToString() == "Contact" ? "active" : "")"
                        asp-action="Contact">Contact</a></li>
             </ul>
