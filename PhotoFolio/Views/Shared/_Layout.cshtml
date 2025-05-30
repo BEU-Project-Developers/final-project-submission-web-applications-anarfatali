@@ -54,30 +54,30 @@
                        asp-action="Index">Home<br></a></li>
                 <li><a asp-controller="About"
                        class="nav-link @(ViewData["ActivePage"]?.ToString() == "About" ? "active" : "")"
-                       asp-action="About">About</a></li>
+                       asp-action="Index">About</a></li>
                 <li class="dropdown"><a asp-controller="Gallery"
                                         class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
-                                        asp-action="Gallery"><span>Gallery</span> <i
+                                        asp-action="Index"><span>Gallery</span> <i
                             class="bi bi-chevron-down toggle-dropdown"></i></a>
                     <ul>
                         <li><a asp-controller="Gallery"
                                class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
-                               asp-action="Gallery">Nature</a></li>
+                               asp-action="Index">Nature</a></li>
                         <li><a asp-controller="Gallery"
                                class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
-                               asp-action="Gallery">People</a></li>
+                               asp-action="Index">People</a></li>
                         <li><a asp-controller="Gallery"
                                class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
-                               asp-action="Gallery">Architecture</a></li>
+                               asp-action="Index">Architecture</a></li>
                         <li><a asp-controller="Gallery"
                                class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
-                               asp-action="Gallery">Animals</a></li>
+                               asp-action="Index">Animals</a></li>
                         <li><a asp-controller="Gallery"
                                class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
-                               asp-action="Gallery">Sports</a></li>
+                               asp-action="Index">Sports</a></li>
                         <li><a asp-controller="Gallery"
                                class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
-                               asp-action="Gallery">Travel</a></li>
+                               asp-action="Index">Travel</a></li>
                         @* @if (User.Identity.IsAuthenticated && User.IsInRole("Photographer")) *@
                         @* { *@
                         <a asp-controller="Photo" asp-action="Upload" class="btn btn-success ms-3">
@@ -89,10 +89,10 @@
                 </li>
                 <li><a asp-controller="Services"
                        class="nav-link @(ViewData["ActivePage"]?.ToString() == "Services" ? "active" : "")"
-                       asp-action="Services">Services</a></li>
+                       asp-action="Index">Services</a></li>
                 <li><a asp-controller="Contact"
                        class="nav-link @(ViewData["ActivePage"]?.ToString() == "Contact" ? "active" : "")"
-                       asp-action="Contact">Contact</a></li>
+                       asp-action="Index">Contact</a></li>
             </ul>
             <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>

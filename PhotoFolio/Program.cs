@@ -13,12 +13,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IGalleryService, GalleryService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 
-// 2) Add Identity
-// builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-//     .AddEntityFrameworkStores<ApplicationDbContext>()
-//     .AddDefaultTokenProviders();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
-// 3) Add MVC
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -36,7 +34,6 @@ var app = builder.Build();
 //     }
 // }
 
-// 5) Configure middleware
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");

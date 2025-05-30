@@ -6,7 +6,7 @@ public class PhotographerRequest
     public string UserId { get; set; } = "";
     public ApplicationUser? User { get; set; }
 
-    public string Experience { get; set; } = "";
+    public int Experience { get; set; }
     public string PortfolioUrl { get; set; } = "";
     public DateTime SubmittedAt { get; set; }
     public string Status { get; set; } = "Pending";

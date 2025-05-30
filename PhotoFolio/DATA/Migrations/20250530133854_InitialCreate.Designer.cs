@@ -12,7 +12,7 @@ using PhotoFolio.DATA;
 namespace PhotoFolio.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250527191316_InitialCreate")]
+    [Migration("20250530133854_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -397,9 +397,8 @@ namespace PhotoFolio.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Experience")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Experience")
+                        .HasColumnType("integer");
 
                     b.Property<string>("PortfolioUrl")
                         .IsRequired()

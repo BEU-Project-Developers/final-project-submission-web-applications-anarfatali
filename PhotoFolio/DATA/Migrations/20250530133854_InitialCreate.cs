@@ -244,7 +244,7 @@ namespace PhotoFolio.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<string>(type: "text", nullable: false),
-                    Experience = table.Column<string>(type: "text", nullable: false),
+                    Experience = table.Column<int>(type: "integer", nullable: false),
                     PortfolioUrl = table.Column<string>(type: "text", nullable: false),
                     SubmittedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false)

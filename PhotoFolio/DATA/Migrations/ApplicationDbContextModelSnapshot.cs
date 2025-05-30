@@ -394,9 +394,8 @@ namespace PhotoFolio.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Experience")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Experience")
+                        .HasColumnType("integer");
 
                     b.Property<string>("PortfolioUrl")
                         .IsRequired()

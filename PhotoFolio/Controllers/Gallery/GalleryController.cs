@@ -12,7 +12,7 @@ public class GalleryController : Controller
         _photoService = photoService;
     }
 
-    public async Task<IActionResult> Gallery()
+    public async Task<IActionResult> Index()
     {
         this.ViewData["ActivePage"] = "Gallery";
         var photos = await _photoService.GetAllPhotosAsync();

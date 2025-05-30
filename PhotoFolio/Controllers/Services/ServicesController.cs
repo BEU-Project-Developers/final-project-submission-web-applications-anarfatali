@@ -4,7 +4,7 @@ namespace PhotoFolio.Controllers.Services;
 
 public class ServicesController : Controller
 {
-    public IActionResult Services()
+    public IActionResult Index()
     {
         this.ViewData["ActivePage"] = "Services";
         return View();

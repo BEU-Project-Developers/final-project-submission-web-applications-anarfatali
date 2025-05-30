@@ -4,7 +4,7 @@ namespace PhotoFolio.Controllers.About;
 
 public class AboutController : Controller
 {
-    public IActionResult About()
+    public IActionResult Index()
     {
         this.ViewData["ActivePage"] = "About";
         return View();

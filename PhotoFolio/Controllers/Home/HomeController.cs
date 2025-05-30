@@ -14,7 +14,7 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        // this.ViewData["ActivePage"] = "Home";
+        this.ViewData["ActivePage"] = "Home";
         var galleryItems = await _galleryService.GetGalleryItemsAsync();
         return View(galleryItems);
     }
