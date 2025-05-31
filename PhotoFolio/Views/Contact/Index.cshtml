@@ -1,8 +1,8 @@
-﻿@model dynamic
+﻿@model PhotoFolio.Models.ContactMessage
 
 @{
-  ViewBag.Title = "title";
-  Layout = "_Layout";
+    ViewBag.Title = "Contact";
+    Layout = "_Layout";
 }
 
 <!-- Page Title -->
@@ -68,37 +68,94 @@
       </div>
     </div>
 
-    <form action="~/forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="300">
+    @* Burada formu ASP.NET MVC tag-helper ilə qururuq *@
+    <form asp-controller="Contact" asp-action="Send" method="post"
+          class="php-email-form" data-aos="fade-up" data-aos-delay="300">
+      <div asp-validation-summary="ModelOnly" class="text-danger"></div>
       <div class="row gy-4">
-
         <div class="col-md-6">
-          <input type="text" name="name" class="form-control" placeholder="Your Name" required="">
+          <input asp-for="Name" type="text" class="form-control" placeholder="Your Name" required />
+          <span asp-validation-for="Name" class="text-danger"></span>
         </div>
-
-        <div class="col-md-6 ">
-          <input type="email" class="form-control" name="email" placeholder="Your Email" required="">
+        <div class="col-md-6">
+          <input asp-for="Email" type="email" class="form-control" placeholder="Your Email" required />
+          <span asp-validation-for="Email" class="text-danger"></span>
         </div>
-
         <div class="col-md-12">
-          <input type="text" class="form-control" name="subject" placeholder="Subject" required="">
+          <input asp-for="Subject" type="text" class="form-control" placeholder="Subject" required />
+          <span asp-validation-for="Subject" class="text-danger"></span>
         </div>
-
         <div class="col-md-12">
-          <textarea class="form-control" name="message" rows="6" placeholder="Message" required=""></textarea>
+          <textarea asp-for="Message" rows="6" class="form-control" placeholder="Message" required></textarea>
+          <span asp-validation-for="Message" class="text-danger"></span>
         </div>
-
         <div class="col-md-12 text-center">
-          <div class="loading">Loading</div>
-          <div class="error-message"></div>
-          <div class="sent-message">Your message has been sent. Thank you!</div>
+          <div class="loading" style="display: none;">Loading</div>
+          <div class="error-message" style="display: none; color:red;"></div>
+          <div class="sent-message alert alert-success text-white fw-bold" style="display: none;">
+            Your message has been sent. Thank you!
+          </div>
 
-          <button type="submit">Send Message</button>
+          <button type="button" class="btn btn-success btn-lg text-white" id="sendBtn">Send Message</button>
         </div>
-
       </div>
-    </form><!-- End Index Form -->
+    </form>
+
 
   </div>
 
 </section><!-- /Index Section -->
 
+@section Scripts {
+    @* Client-side validation skriptləri *@
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+      // Form obyektini götürürük
+      const form = document.querySelector('.php-email-form');
+      const sendBtn = document.getElementById('sendBtn');
+      const loading = form.querySelector('.loading');
+      const errorMessage = form.querySelector('.error-message');
+      const sentMessage = form.querySelector('.sent-message');
+
+      sendBtn.addEventListener('click', function () {
+        // Hər dəfə düymə basılanda əvvəlcə validation-u yoxlayaq
+        if (!form.checkValidity()) {
+          // HTML5 validation səhvlərini göstərəcək:
+          form.reportValidity();
+          return;
+        }
+
+        // Status mesajlarını gizlət
+        loading.style.display = 'block';
+        errorMessage.style.display = 'none';
+        sentMessage.style.display = 'none';
+
+        // Antiforgery token varsa FormData-ya əlavə olunsun
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+          method: 'POST',
+          body: formData
+        })
+          .then(response => response.json())
+          .then(data => {
+            loading.style.display = 'none';
+            if (data.success) {
+              sentMessage.style.display = 'block';
+              errorMessage.style.display = 'none';
+              form.reset();
+            } else {
+              errorMessage.textContent = data.error || 'An error occurred.';
+              errorMessage.style.display = 'block';
+              sentMessage.style.display = 'none';
+            }
+          })
+          .catch(err => {
+            loading.style.display = 'none';
+            errorMessage.textContent = 'Network error. Please try again.';
+            errorMessage.style.display = 'block';
+            sentMessage.style.display = 'none';
+          });
+      });
+    </script>
+}
