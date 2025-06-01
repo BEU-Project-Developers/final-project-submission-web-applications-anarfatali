@@ -73,7 +73,7 @@ namespace PhotoFolio.Controllers.Account
 
             var user = new ApplicationUser
             {
-                UserName = vm.Email,
+                UserName = vm.Username,
                 Email = vm.Email
             };
 

@@ -4,7 +4,7 @@
     Layout = null;
 }
 
-<link rel="stylesheet" href="~/css/login.css" />
+<link rel="stylesheet" href="~/css/login.css"/>
 
 <div class="auth-wrapper">
     <div class="form-modal">
@@ -45,8 +45,38 @@
             <button type="submit" class="btn btn-success w-100">Create Account</button>
 
             <p class="mt-3 text-center small">
-                By clicking <strong>Create Account</strong>, you agree to our <a href="#">Terms of Service</a>.
+                By clicking <strong>Create Account</strong>, you agree to our  <a href="javascript:void(0)" onclick="showEasterEgg()" id="tos-link">
+                    Terms of Service
+                </a>.
             </p>
+
+            <div id="tos-easter" style="display: none; position: fixed; 
+     top: 50%; left: 50%; transform: translate(-50%, -50%); 
+     background: rgba(0,0,0,0.8); color: #fff; padding: 1.5rem; 
+     border-radius: 8px; z-index: 1000; text-align: center; max-width: 300px;">
+                <p>You won't read it anyway—just continue creating your account 😉</p>
+                <button onclick="closeEasterEgg()" style="margin-top: 1rem; 
+          background: #57b846; color: white; border: none; 
+          padding: 0.5rem 1rem; border-radius: 4px;">
+                    Got it
+                </button>
+            </div>
+            <!-- (Optional) a semi-transparent backdrop -->
+            <div id="tos-backdrop" style="display: none; position: fixed; 
+     top: 0; left: 0; width: 100%; height: 100%; 
+     background: rgba(0,0,0,0.5); z-index: 900;"></div>
+
+            <script>
+                function showEasterEgg() {
+                    document.getElementById('tos-backdrop').style.display = 'block';
+                    document.getElementById('tos-easter').style.display = 'block';
+                }
+
+                function closeEasterEgg() {
+                    document.getElementById('tos-easter').style.display = 'none';
+                    document.getElementById('tos-backdrop').style.display = 'none';
+                }
+            </script>
         }
 
         <p class="text-center small mt-2">
