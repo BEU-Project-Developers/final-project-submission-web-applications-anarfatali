@@ -78,12 +78,12 @@
                         <li><a asp-controller="Gallery"
                                class="nav-link @(ViewData["ActivePage"]?.ToString() == "Gallery" ? "active" : "")"
                                asp-action="Index" asp-route-category="Travel">Travel</a></li>
-                        @* @if (User.Identity.IsAuthenticated && User.IsInRole("Photographer")) *@
-                        @* { *@
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Photographer"))
+                        {
                         <a asp-controller="Photo" asp-action="Upload" class="btn btn-success ms-3">
                             <i class="bi bi-upload me-1"></i> Upload Photo
                         </a>
-                        @* } *@
+                        }
 
                     </ul>
                 </li>
@@ -112,7 +112,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark mt-2" aria-labelledby="userDropdown"
                         style="min-width: 200px;">
-                        <li class="px-3 py-2 text-white"><strong>@User.Identity.Name Test name</strong></li>
+                        <li class="px-3 py-2 text-white"><strong>@User.Identity.Name</strong></li>
                         <li><a class="dropdown-item mb-1" asp-controller="Account" asp-action="Profile">Profile</a>
                         </li>
                         <li>

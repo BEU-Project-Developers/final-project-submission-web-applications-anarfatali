@@ -23,7 +23,6 @@ public class ContactController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Send(ContactMessage model)
     {
-        // Əvvəlcə “ModelState”-ə baxırıq:
         if (!ModelState.IsValid)
         {
             return Json(new { 

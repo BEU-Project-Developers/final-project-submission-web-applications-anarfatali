@@ -1,47 +1,43 @@
-﻿@model PhotoFolio.ViewModels.AccountViewModel
+﻿@model PhotoFolio.ViewModels.LoginViewModel
 
 @{
   Layout = null;
 }
 
-<link rel="stylesheet" href="~/css/login.css"/>
-
-<script src="~/js/login.js"></script>
+<link rel="stylesheet" href="~/css/login.css" />
 
 <div class="auth-wrapper">
   <div class="form-modal">
-    <div class="form-toggle">
-      <button id="login-toggle" onclick="toggleLogin()">log in</button>
-      <button id="signup-toggle" onclick="toggleSignup()">sign up</button>
-    </div>
+    <h3 class="text-center mb-4">Login to PhotoFolio</h3>
 
-    <div id="login-form">
-      @using (Html.BeginForm("Login", "Account", FormMethod.Post))
-      {
-        @Html.AntiForgeryToken()
-        @Html.TextBoxFor(m => m.Username, new { placeholder = "Enter email or username" })
-        @Html.PasswordFor(m => m.Password, new { placeholder = "Enter password" })
-        <button type="submit" class="btn login">login</button>
-        <hr/>
-        <p class="text-center">
-          Don’t have an account?
-          <a href="javascript:void(0);" onclick="toggleSignup()">Register now</a>
-        </p>
-      }
-    </div>
+    @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+    {
+      @Html.AntiForgeryToken()
+      <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <div id="signup-form">
-      @using (Html.BeginForm("Signup", "Account", FormMethod.Post))
-      {
-        @Html.AntiForgeryToken()
-        @Html.TextBoxFor(m => m.Email, new { placeholder = "Enter your email", type = "email" })
-        @Html.TextBoxFor(m => m.Username, new { placeholder = "Choose username" })
-        @Html.PasswordFor(m => m.Password, new { placeholder = "Create password" })
-        @Html.PasswordFor(m => m.ConfirmPassword, new { placeholder = "Confirm password" })
-        <button type="submit" class="btn signup">create account</button>
-        <p>Clicking <strong>create account</strong> means that you agree to our <a href="#">terms of services</a>.</p>
-        <hr/>
-      }
-    </div>
+      <div class="mb-3">
+        @Html.LabelFor(m => m.Email)
+        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Enter your email", type = "email" })
+        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+      </div>
+      <br/>
+
+      <div class="mb-3">
+        @Html.LabelFor(m => m.Password)
+        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Enter password" })
+        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+      </div>
+      <br/>
+
+      <button type="submit" class="btn btn-primary w-100">Login</button>
+    }
+
+    <hr class="my-3"/>
+    <p class="text-center small">
+      Don’t have an account?
+      <a asp-controller="Account" asp-action="Register">Sign up now</a>
+    </p>
   </div>
 </div>
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>

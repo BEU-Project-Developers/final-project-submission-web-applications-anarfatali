@@ -13,7 +13,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IGalleryService, GalleryService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+    {
+        options.Password.RequiredLength = 6;
+        options.Password.RequireDigit = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+    })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
@@ -21,18 +27,6 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// 4) Seed Roles
-// using (var scope = app.Services.CreateScope())
-// {
-//     var services = scope.ServiceProvider;
-//     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-//     string[] roles = { "User", "Photographer", "Admin" };
-//     foreach (var role in roles)
-//     {
-//         if (!await roleManager.RoleExistsAsync(role))
-//             await roleManager.CreateAsync(new IdentityRole(role));
-//     }
-// }
 
 if (!app.Environment.IsDevelopment())
 {
