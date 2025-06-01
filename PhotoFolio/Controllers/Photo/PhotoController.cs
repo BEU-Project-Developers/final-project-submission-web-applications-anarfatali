@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PhotoFolio.DATA;
+using PhotoFolio.Models;
 using PhotoFolio.ViewModels;
 
 namespace PhotoFolio.Controllers.Photo;
@@ -10,13 +12,18 @@ public class PhotoController : Controller
 {
     private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly ApplicationDbContext _context;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
 
-    public PhotoController(IWebHostEnvironment webHostEnvironment, ApplicationDbContext context)
+    public PhotoController(IWebHostEnvironment webHostEnvironment, ApplicationDbContext context,UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager)
     {
         _webHostEnvironment = webHostEnvironment;
         _context = context;
+        _userManager = userManager;
+        _signInManager = signInManager;
     }
-
+    
     [HttpGet]
     public IActionResult Upload()
     {
@@ -27,17 +34,7 @@ public class PhotoController : Controller
 
         return View();
     }
-
-    // [HttpPost]
-    // [ValidateAntiForgeryToken]
-    // public async Task<IActionResult> Upload(PhotoUploadViewModel vm)
-    // {
-    //     if (!ModelState.IsValid) return View(vm);
-    //
-    //     // Şəkili yaddaşa yaz, DATA-yə url əlavə et
-    //     return RedirectToAction("Index", "Home");
-    // }
-
+    
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Upload(PhotoUploadViewModel vm)

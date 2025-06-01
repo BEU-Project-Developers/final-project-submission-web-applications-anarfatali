@@ -4,11 +4,8 @@ namespace PhotoFolio.ViewModels;
 
 public class LoginViewModel
 {       
-    [Required]
-    [EmailAddress]
-    public string Email { get; set; } = "";
-    
-    public string Username { get; set; } = "";
+    [Required(ErrorMessage = "Login can not be empty.")]
+    public string Login { get; set; }    
 
     [Required]
     [DataType(DataType.Password)]

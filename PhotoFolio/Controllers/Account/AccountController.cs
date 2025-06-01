@@ -30,13 +30,31 @@ public class AccountController : Controller
     public async Task<IActionResult> Login(LoginViewModel vm, string returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
-
         if (!ModelState.IsValid)
+            return View(vm);
+
+        // 1) İlk öncə, login dəyəri username kimi yoxla
+        ApplicationUser user = await _userManager.FindByNameAsync(vm.Login);
+
+        // 2) Əgər yuxarıdakı tapmadısa, onda email kimi yoxla
+        if (user == null)
         {
+            user = await _userManager.FindByEmailAsync(vm.Login);
+        }
+
+        // 3) Hələ də user null-dursa, deməli hem username, hem email bazada yoxdur
+        if (user == null)
+        {
+            ModelState.AddModelError(string.Empty, "Wrong username/email or password.");
             return View(vm);
         }
 
-        var result = await _signInManager.PasswordSignInAsync(vm.Email, vm.Password, vm.RememberMe, lockoutOnFailure: false);
+        // 4) User tapılıb, indi onun UserName sahəsini götürüb PasswordSignInAsync ilə yoxla
+        var result = await _signInManager.PasswordSignInAsync(
+            user.UserName, 
+            vm.Password, 
+            vm.RememberMe, 
+            lockoutOnFailure: false);
 
         if (result.Succeeded)
         {
@@ -52,9 +70,11 @@ public class AccountController : Controller
             return View(vm);
         }
 
-        ModelState.AddModelError(string.Empty, "Wrong email or password.");
+        // Əgər şifrə səhvdisə
+        ModelState.AddModelError(string.Empty, "Wrong username/email or password.");
         return View(vm);
     }
+
 
     [HttpGet]
     public IActionResult Register()
@@ -98,6 +118,6 @@ public class AccountController : Controller
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Login", "Account");
     }
 }
