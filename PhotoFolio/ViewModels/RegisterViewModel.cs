@@ -9,6 +9,8 @@ public class RegisterViewModel
     public string Email { get; set; } = "";
     
     public string Username { get; set; } = "";
+    
+    public string Fullname { get; set; } = "";
 
     [Required]
     [StringLength(100, ErrorMessage = "The {0} must be at least {2} chars long.", MinimumLength = 6)]

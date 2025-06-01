@@ -21,6 +21,13 @@
                 @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
             </div>
             <br/>
+            
+            <div class="mb-3">
+                    @Html.LabelFor(m => m.Fullname)
+                @Html.TextBoxFor(m => m.Fullname, new { @class = "form-control", placeholder = "Enter your full name" })
+                @Html.ValidationMessageFor(m => m.Fullname, "", new { @class = "text-danger" })
+                </div>
+            <br/>
 
             <div class="mb-3">
                 @Html.LabelFor(m => m.Username)
