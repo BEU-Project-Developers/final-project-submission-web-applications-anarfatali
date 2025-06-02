@@ -1,87 +1,249 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PhotoFolio.DATA;
 using PhotoFolio.Models;
 using PhotoFolio.ViewModels;
 
 namespace PhotoFolio.Controllers.Photo;
 
-[Authorize(Roles = "Photographer")]
 public class PhotoController : Controller
 {
-    private readonly IWebHostEnvironment _webHostEnvironment;
-    private readonly ApplicationDbContext _context;
+    private readonly ApplicationDbContext _db;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
 
-    public PhotoController(IWebHostEnvironment webHostEnvironment, ApplicationDbContext context,UserManager<ApplicationUser> userManager,
+    public PhotoController(
+        ApplicationDbContext db,
+        UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager)
     {
-        _webHostEnvironment = webHostEnvironment;
-        _context = context;
+        _db = db;
         _userManager = userManager;
         _signInManager = signInManager;
     }
-    
+
     [HttpGet]
-    public IActionResult Upload()
+    public async Task<IActionResult> Upload()
     {
-        if (!this.User.IsInRole("Photographer"))
+        // (a) If user is not signed in, force login:
+        var user = await _userManager.GetUserAsync(this.User);
+        if (user == null)
         {
-            return RedirectToAction("Request", "Photo");
+            return Challenge();
         }
 
-        return View();
+        // (b) If user exists but is NOT a Photographer → show the “Request” form instead:
+        if (!await _userManager.IsInRoleAsync(user, "Photographer"))
+        {
+            return RedirectToAction(nameof(ApplyPhotographer));
+        }
+
+        // (c) User IS a Photographer, so fetch all of that user’s photos:
+        var photosForUser = await _db.Photos
+            .Where(p => p.PhotographerId == user.Id)
+            .OrderByDescending(p => p.UploadedAt)
+            .ToListAsync();
+
+        // Return Upload.cshtml, model = List<Photo>
+        return View("Upload", photosForUser);
     }
-    
+
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Upload(PhotoUploadViewModel vm)
+    public async Task<IActionResult> Upload(IFormFile[]? files)
+    {
+        var user = await _userManager.GetUserAsync(this.User);
+        if (user == null)
+        {
+            return Challenge();
+        }
+
+        // If the user somehow lost the “Photographer” role in the meantime, bounce back to GET Upload
+        if (!await _userManager.IsInRoleAsync(user, "Photographer"))
+        {
+            return RedirectToAction(nameof(Upload));
+        }
+
+        // If no files were posted:
+        if (files == null || files.Length == 0)
+        {
+            ModelState.AddModelError("", "You must select at least one file.");
+
+            var existing = await _db.Photos
+                .Where(p => p.PhotographerId == user.Id)
+                .OrderByDescending(p => p.UploadedAt)
+                .ToListAsync();
+            return View("Upload", existing);
+        }
+
+        // If too many files at once:
+        if (files.Length > 10)
+        {
+            ModelState.AddModelError("", "You can upload up to 10 photos at once.");
+            var existing = await _db.Photos
+                .Where(p => p.PhotographerId == user.Id)
+                .OrderByDescending(p => p.UploadedAt)
+                .ToListAsync();
+            return View("Upload", existing);
+        }
+
+        var allowedContentTypes = new[] { "image/jpeg", "image/png", "image/gif" , "image/jpg"};
+
+        foreach (var file in files)
+        {
+            if (file.Length == 0)
+            {
+                ModelState.AddModelError("", $"File '{file.FileName}' is invalid or empty.");
+                continue;
+            }
+
+            if (file.Length > 10 * 1024 * 1024)
+            {
+                ModelState.AddModelError("", $"\"{file.FileName}\" can't exceed 10MB.");
+                continue;
+            }
+
+            if (!allowedContentTypes.Contains(file.ContentType))
+            {
+                ModelState.AddModelError("", $"\"{file.FileName}\" must be JPG, PNG, or GIF.");
+                continue;
+            }
+
+            byte[] data;
+            using (var ms = new MemoryStream())
+            {
+                await file.CopyToAsync(ms);
+                data = ms.ToArray();
+            }
+            
+            var uploadsRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            if (!Directory.Exists(uploadsRoot))
+            {
+                Directory.CreateDirectory(uploadsRoot);
+            }
+            
+            var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            var filePath = Path.Combine(uploadsRoot, uniqueFileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            
+            var random = new Random();
+            var categoryId = random.Next(1, 7);
+
+            var photo = new Models.Photo
+            {
+                CategoryId = categoryId,
+                FileName = Path.GetFileName(file.FileName),
+                ContentType = file.ContentType,
+                Data = data,
+                Url = $"/uploads/{uniqueFileName}",
+                PhotographerId = user.Id,
+                UploadedAt = DateTime.UtcNow
+            };
+
+            _db.Photos.Add(photo);
+        }
+
+        await _db.SaveChangesAsync();
+
+        TempData["Success"] = "Photos uploaded successfully!";
+        return RedirectToAction(nameof(Upload));
+    }
+
+    [HttpGet]
+    public IActionResult ApplyPhotographer()
+    {
+        return View("Request", new PhotographerApplicationViewModel());
+    }
+
+    //
+    // 3) POST: Photographer başvuru formu gönderildiğinde burası tetiklenir.
+    //    (a) Model doğrulaması yaparız.
+    //    (b) Demo amaçlı, kullanıcıya Photographer rolü hemen verilir.
+    //    (c) Cookie güncellemesi için RefreshSignInAsync çağrılır.
+    //    (d) Tekrar Upload aksiyonuna yönlendiririz.
+    //
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ApplyPhotographer(PhotographerApplicationViewModel vm)
     {
         if (!this.ModelState.IsValid)
         {
-            return View(vm);
+            return View("Request", vm);
         }
 
-        if (vm.File.Length == 0)
+        // Şu an aşırı basit: Kullanıcı başvuru formu doldurunca doğrudan rol veriyoruz.
+        var user = await _userManager.GetUserAsync(this.User);
+        if (user == null)
         {
-            this.ModelState.AddModelError("File", "Please select a file.");
-            return View(vm);
+            return Challenge();
         }
 
-        var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
-        if (!Directory.Exists(uploadsFolder))
+        var request = new PhotographerRequest
         {
-            Directory.CreateDirectory(uploadsFolder);
-        }
-
-        var uniqueFileName = Guid.NewGuid() + "_" + Path.GetFileName(vm.File.FileName);
-        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-        using (var fileStream = new FileStream(filePath, FileMode.Create))
-        {
-            await vm.File.CopyToAsync(fileStream);
-        }
-
-        var photo = new Models.Photo
-        {
-            FileName = uniqueFileName,
-            Url = "/uploads/" + uniqueFileName,
-            Title = vm.Title,
-            Description = vm.Description,
-            UploadedAt = DateTime.Now,
+            UserId = user.Id,
+            Name = vm.Name,
+            Surname = vm.Surname,
+            Age = vm.Age,
+            Experience = vm.Experience,
+            PortfolioUrl = vm.PortfolioUrl,
+            RequestedAt = DateTime.UtcNow,
+            IsApproved = false
         };
 
-        _context.Photos.Add(photo);
-        await _context.SaveChangesAsync();
+        _db.PhotographerRequests.Add(request);
+        await _db.SaveChangesAsync();
 
-        return RedirectToAction("Index", "Home");
+        TempData["Success"] = "Your request has been submitted. Wait for admin approval.";
+        return RedirectToAction(nameof(ApplyPhotographer));
     }
 
+    // 7) GET: Bir fotoğrafı tarayıcıya FileResult olarak döner. 
+    //    <img src="@Url.Action("GetImage", new { id = photo.Id })" ... />
+    //
+    [AllowAnonymous]
     [HttpGet]
-    public IActionResult Request()
+    public IActionResult GetImage(int id)
     {
-        return View();
+        var photo = _db.Photos.Find(id);
+        if (photo == null)
+        {
+            return NotFound();
+        }
+
+        return File(photo.Data, photo.ContentType);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var user = await _userManager.GetUserAsync(this.User);
+        if (user == null)
+        {
+            return Challenge();
+        }
+
+        var photo = await _db.Photos.FindAsync(id);
+        if (photo == null)
+        {
+            return NotFound();
+        }
+
+        if (photo.PhotographerId != user.Id)
+        {
+            return Forbid();
+        }
+
+        _db.Photos.Remove(photo);
+        await _db.SaveChangesAsync();
+
+        TempData["Success"] = "Photo deleted successfully.";
+        return RedirectToAction(nameof(Upload));
     }
 }

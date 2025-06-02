@@ -1,341 +1,217 @@
-﻿@model dynamic
+﻿@model IEnumerable<PhotoFolio.Models.Photo>
 
 @{
+    ViewData["Title"] = "Upload & Gallery";
     Layout = null;
 }
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Upload Gallery</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="photo-upload.css">
+    <meta charset="utf-8"/>
+    <title>Upload & Gallery</title>
+    <!-- Bootstrap CSS (you can switch to local file if needed) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <!-- Bootstrap Icons (optional) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"/>
+
+    <style>
+        .text-dark-green {
+            color: #0f5132;
+        }
+
+        #dropzone {
+            border: 2px dashed #0f5132;
+            cursor: pointer;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay {
+            background: rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            transition: opacity .3s;
+        }
+
+        .gallery-overlay .btn {
+            margin: 0 0.25rem;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-light">
 <div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <div class="text-center mb-5">
-                <h1 class="display-5 fw-bold gradient-text">Photo Gallery</h1>
-                <p class="lead">Upload your favorite photos and share your moments</p>
-            </div>
+    <!-- Page Title -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8 text-center">
+            <h1 class="display-5 fw-bold text-dark-green">Photo Gallery</h1>
+            <p class="lead">Upload your favorite photos and share your moments</p>
+        </div>
+    </div>
 
-            <!-- Upload Section -->
-            <div class="upload-container mb-5">
-                <div class="card border-0 shadow-lg">
-                    <div class="card-body p-0">
-                        <div class="row g-0">
-                            <div class="col-md-5">
-                                <div class="upload-info p-4 p-md-5">
-                                    <h3 class="mb-4">Upload Photos</h3>
-                                    <p>Share your best moments with the world. Upload high-quality images to your
-                                        gallery.</p>
+    <!-- Upload Form Section -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">@TempData["Success"]</div>
+            }
 
-                                    <div class="upload-features">
-                                        <div class="feature">
-                                            <div class="feature-icon">
-                                                <i class="bi bi-image"></i>
-                                            </div>
-                                            <div class="feature-text">
-                                                <h5>Multiple Formats</h5>
-                                                <p>JPG, PNG, GIF supported</p>
-                                            </div>
-                                        </div>
 
-                                        <div class="feature">
-                                            <div class="feature-icon">
-                                                <i class="bi bi-arrows-angle-expand"></i>
-                                            </div>
-                                            <div class="feature-text">
-                                                <h5>Any Size</h5>
-                                                <p>Up to 10MB per image</p>
-                                            </div>
-                                        </div>
-
-                                        @* <div class="feature"> *@
-                                        @*     <div class="feature-icon"> *@
-                                        @*         <i class="bi bi-collection"></i> *@
-                                        @*     </div> *@
-                                        @*     $1$ <div class="feature-text"> #1# *@
-                                        @*     $1$     <h5>Organize</h5> #1# *@
-                                        @*     $1$     <p>Create albums and collections</p> #1# *@
-                                        @*     $1$ </div> #1# *@
-                                        @* </div> *@
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-7">
-                                <div class="upload-area p-4 p-md-5">
-                                    <div class="dropzone" id="dropzone">
-                                        <input type="file" id="file-input" multiple accept="image/*" class="file-input">
-                                        <div class="dropzone-content">
-                                            <div class="upload-icon">
-                                                <i class="bi bi-cloud-arrow-up"></i>
-                                            </div>
-                                            <h4>Drag & Drop Photos Here</h4>
-                                            <p>or</p>
-                                            <button class="btn btn-upload" id="browse-btn">Browse Files</button>
-                                            <p class="mt-2 text-muted">Upload up to 10 photos at once</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="upload-progress d-none" id="upload-progress">
-                                        <div class="progress-info mb-2">
-                                            <span>Uploading...</span>
-                                            <span id="progress-percentage">0%</span>
-                                        </div>
-                                        <div class="progress" style="height: 10px;">
-                                            <div class="progress-bar progress-bar-striped progress-bar-animated"
-                                                 id="progress-bar" role="progressbar" style="width: 0%"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Gallery Section -->
-            <div class="gallery-container">
-                <div class="gallery-header mb-4">
-                    <h3 class="mb-0">Your Photos</h3>
-                    <div class="gallery-actions">
-                        <div class="btn-group">
-                            @* <button class="btn btn-outline-primary active">All</button> *@
-                            @* <button class="btn btn-outline-primary">Recent</button> *@
-                            @* <button class="btn btn-outline-primary">Favorites</button> *@
-                        </div>
+            <form asp-action="Upload" asp-controller="Photo" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div id="dropzone">
+                    <!-- FIX: Move file input out of overlay position -->
+                    <input type="file" id="file-input" name="files" multiple accept="image/*"
+                           style="display: none;"/>
+                    <div class="dropzone-content">
+                        <i class="bi bi-cloud-arrow-up fs-1 text-success mb-3"></i>
+                        <h4>Drag &amp; Drop Photos Here</h4>
+                        <p>or</p>
+                        <button type="button" class="btn btn-success mb-2" id="browse-btn">Browse Files</button>
+                        <p class="mt-2 text-muted">Upload up to 10 photos at once</p>
                     </div>
                 </div>
 
-                <div class="row g-4" id="gallery">
-                    <!-- Sample Photos -->
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="gallery-item">
-                            <img src="https://source.unsplash.com/random/600x600?nature=1" alt="Nature"
-                                 class="img-fluid">
-                            <div class="gallery-overlay">
-                                <div class="gallery-actions">
-                                    @* <button class="action-btn"><i class="bi bi-heart"></i></button> *@
-                                    <button class="action-btn"><i class="bi bi-zoom-in"></i></button>
-                                    <button class="action-btn"><i class="bi bi-trash"></i></button>
-                                </div>
-                            </div>
-                            <div class="gallery-info">
-                                <h5>Nature View</h5>
-                                <p>Uploaded 2 days ago</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="gallery-item">
-                            <img src="https://source.unsplash.com/random/600x600?beach=1" alt="Beach" class="img-fluid">
-                            <div class="gallery-overlay">
-                                <div class="gallery-actions">
-                                    <button class="action-btn"><i class="bi bi-heart"></i></button>
-                                    <button class="action-btn"><i class="bi bi-zoom-in"></i></button>
-                                    <button class="action-btn"><i class="bi bi-trash"></i></button>
-                                </div>
-                            </div>
-                            <div class="gallery-info">
-                                <h5>Beach Sunset</h5>
-                                <p>Uploaded 3 days ago</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="gallery-item">
-                            <img src="https://source.unsplash.com/random/600x600?mountain=1" alt="Mountain"
-                                 class="img-fluid">
-                            <div class="gallery-overlay">
-                                <div class="gallery-actions">
-                                    <button class="action-btn"><i class="bi bi-heart"></i></button>
-                                    <button class="action-btn"><i class="bi bi-zoom-in"></i></button>
-                                    <button class="action-btn"><i class="bi bi-trash"></i></button>
-                                </div>
-                            </div>
-                            <div class="gallery-info">
-                                <h5>Mountain Peak</h5>
-                                <p>Uploaded 5 days ago</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="gallery-item">
-                            <img src="https://source.unsplash.com/random/600x600?city=1" alt="City" class="img-fluid">
-                            <div class="gallery-overlay">
-                                <div class="gallery-actions">
-                                    <button class="action-btn"><i class="bi bi-heart"></i></button>
-                                    <button class="action-btn"><i class="bi bi-zoom-in"></i></button>
-                                    <button class="action-btn"><i class="bi bi-trash"></i></button>
-                                </div>
-                            </div>
-                            <div class="gallery-info">
-                                <h5>City Lights</h5>
-                                <p>Uploaded 1 week ago</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="gallery-item">
-                            <img src="https://source.unsplash.com/random/600x600?food=1" alt="Food" class="img-fluid">
-                            <div class="gallery-overlay">
-                                <div class="gallery-actions">
-                                    <button class="action-btn"><i class="bi bi-heart"></i></button>
-                                    <button class="action-btn"><i class="bi bi-zoom-in"></i></button>
-                                    <button class="action-btn"><i class="bi bi-trash"></i></button>
-                                </div>
-                            </div>
-                            <div class="gallery-info">
-                                <h5>Delicious Meal</h5>
-                                <p>Uploaded 1 week ago</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="gallery-item">
-                            <img src="https://source.unsplash.com/random/600x600?travel=1" alt="Travel"
-                                 class="img-fluid">
-                            <div class="gallery-overlay">
-                                <div class="gallery-actions">
-                                    <button class="action-btn"><i class="bi bi-heart"></i></button>
-                                    <button class="action-btn"><i class="bi bi-zoom-in"></i></button>
-                                    <button class="action-btn"><i class="bi bi-trash"></i></button>
-                                </div>
-                            </div>
-                            <div class="gallery-info">
-                                <h5>Travel Memory</h5>
-                                <p>Uploaded 2 weeks ago</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="gallery-item">
-                            <img src="https://source.unsplash.com/random/600x600?animal=1" alt="Animal"
-                                 class="img-fluid">
-                            <div class="gallery-overlay">
-                                <div class="gallery-actions">
-                                    <button class="action-btn"><i class="bi bi-heart"></i></button>
-                                    <button class="action-btn"><i class="bi bi-zoom-in"></i></button>
-                                    <button class="action-btn"><i class="bi bi-trash"></i></button>
-                                </div>
-                            </div>
-                            <div class="gallery-info">
-                                <h5>Wild Animal</h5>
-                                <p>Uploaded 3 weeks ago</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="gallery-item">
-                            <img src="https://source.unsplash.com/random/600x600?flower=1" alt="Flower"
-                                 class="img-fluid">
-                            <div class="gallery-overlay">
-                                <div class="gallery-actions">
-                                    <button class="action-btn"><i class="bi bi-heart"></i></button>
-                                    <button class="action-btn"><i class="bi bi-zoom-in"></i></button>
-                                    <button class="action-btn"><i class="bi bi-trash"></i></button>
-                                </div>
-                            </div>
-                            <div class="gallery-info">
-                                <h5>Beautiful Flower</h5>
-                                <p>Uploaded 1 month ago</p>
-                            </div>
-                        </div>
-                    </div>
+                <br>
+                <!-- FIX: Add selected files display -->
+                <div id="selected-files" class="selected-files d-none">
+                    <h6>Selected Files:</h6>
+                    <ul id="file-list" class="list-group"></ul>
                 </div>
 
-                <div class="text-center mt-5">
-                    <button class="btn btn-outline-primary btn-lg">Load More Photos</button>
+                <!-- ... progress bar unchanged ... -->
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-success btn-lg">Start Upload</button>
                 </div>
-            </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Gallery Section -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="text-dark-green mb-4">Your Photos</h3>
+
+            @if (!Model.Any())
+            {
+                <p class="text-muted">You haven’t uploaded any photos yet.</p>
+            }
+            else
+            {
+                <div class="row g-4">
+                    @foreach (var photo in Model)
+                    {
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <div class="card position-relative">
+                                <img
+                                    src="@photo.Url" 
+                                    class="card-img-top"
+                                    style="height:200px; object-fit:cover;"
+                                    alt=""/>
+                                <div
+                                    class="gallery-overlay position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center">
+                                    <button
+                                        class="btn btn-outline-light btn-sm me-1"
+                                        onclick="window.open('@Url.Action("GetImage", "Photo", new { id = photo.Id })','_blank')">
+                                        <i class="bi bi-zoom-in"></i>
+                                    </button>
+                                    <form asp-action="Delete" asp-controller="Photo" asp-route-id="@photo.Id"
+                                          method="post" onsubmit="return confirm('Delete this photo?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text text-success">@photo.FileName</p>
+                                    <p class="card-subtitle mb-2 text-muted">
+                                        Uploaded: @photo.UploadedAt.ToLocalTime().ToString("dd MMM yyyy HH:mm")
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
         </div>
     </div>
 </div>
 
-<!-- Bootstrap JS Bundle with Popper -->
+<!-- jQuery & Bootstrap JS -->
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Simple upload simulation script -->
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const dropzone = document.getElementById('dropzone');
-        const fileInput = document.getElementById('file-input');
-        const browseBtn = document.getElementById('browse-btn');
-        const uploadProgress = document.getElementById('upload-progress');
-        const progressBar = document.getElementById('progress-bar');
-        const progressPercentage = document.getElementById('progress-percentage');
 
-        // Open file dialog when browse button is clicked
-        browseBtn.addEventListener('click', function () {
-            fileInput.click();
+    $(function () {
+        var dropzone = $("#dropzone");
+        var fileInput = $("#file-input");
+        var browseBtn = $("#browse-btn");
+        var selectedFiles = $("#selected-files");
+        var fileList = $("#file-list");
+
+        // FIX: Properly handle browse button click
+        browseBtn.on("click", function () {
+            fileInput.trigger('click');
         });
 
-        // Handle file selection
-        fileInput.addEventListener('change', function () {
+        // FIX: Handle file selection
+        fileInput.on("change", function(e) {
+            fileList.empty();
             if (this.files.length > 0) {
-                simulateUpload();
-            }
-        });
+                selectedFiles.removeClass('d-none');
 
-        // Handle drag and drop
-        dropzone.addEventListener('dragover', function (e) {
-            e.preventDefault();
-            dropzone.classList.add('dragover');
-        });
-
-        dropzone.addEventListener('dragleave', function () {
-            dropzone.classList.remove('dragover');
-        });
-
-        dropzone.addEventListener('drop', function (e) {
-            e.preventDefault();
-            dropzone.classList.remove('dragover');
-
-            if (e.dataTransfer.files.length > 0) {
-                fileInput.files = e.dataTransfer.files;
-                simulateUpload();
-            }
-        });
-
-        // Simulate upload progress
-        function simulateUpload() {
-            uploadProgress.classList.remove('d-none');
-            let progress = 0;
-
-            const interval = setInterval(function () {
-                progress += Math.random() * 10;
-                if (progress > 100) progress = 100;
-
-                progressBar.style.width = progress + '%';
-                progressPercentage.textContent = Math.round(progress) + '%';
-
-                if (progress === 100) {
-                    clearInterval(interval);
-                    setTimeout(function () {
-                        uploadProgress.classList.add('d-none');
-                        alert('Upload complete! Your photos have been added to the gallery.');
-                        // In a real app, you would add the new images to the gallery here
-                    }, 500);
+                for (var i = 0; i < this.files.length; i++) {
+                    var file = this.files[i];
+                    fileList.append(
+                        `<li class="list-group-item d-flex justify-content-between align-items-center">
+                            ${file.name}
+                            <span class="badge bg-primary rounded-pill">${formatFileSize(file.size)}</span>
+                        </li>`
+                    );
                 }
-            }, 300);
+            } else {
+                selectedFiles.addClass('d-none');
+            }
+        });
+
+        dropzone.on("dragover", function (e) {
+            e.preventDefault();
+            dropzone.addClass("border-success");
+        });
+
+        dropzone.on("dragleave", function () {
+            dropzone.removeClass("border-success");
+        });
+
+        dropzone.on("drop", function (e) {
+            e.preventDefault();
+            dropzone.removeClass("border-success");
+
+            // FIX: Handle dropped files
+            if (e.originalEvent.dataTransfer.files.length > 0) {
+                fileInput[0].files = e.originalEvent.dataTransfer.files;
+                fileInput.trigger('change');
+            }
+        });
+
+        // Helper function to format file sizes
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2) + ' ' + sizes[i]);
         }
     });
+
 </script>
 </body>
 </html>
