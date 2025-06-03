@@ -15,7 +15,17 @@ public class HomeController : Controller
     public async Task<IActionResult> Index()
     {
         this.ViewData["ActivePage"] = "Home";
-        var galleryItems = await _galleryService.GetGalleryItemsAsync();
-        return View(galleryItems);
+        
+        try
+        {
+            var galleryItems = await _galleryService.GetGalleryItemsAsync();
+            return View(galleryItems);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[HomeController.Index] Error: {ex.Message}");
+            ViewBag.ErrorMessage = ex.Message;
+            return View();
+        }
     }
 }

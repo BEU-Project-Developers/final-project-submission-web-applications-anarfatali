@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PhotoFolio.DATA;
 
@@ -16,12 +17,21 @@ public class AboutController : Controller
     public async Task<IActionResult> Index()
     {
         this.ViewData["ActivePage"] = "About";
-        var testimonials = await _db.Feedbacks
-            .Where(f => f.Id >= 1 && f.Id <= 5)
-            .Include(f => f.User)
-            .OrderBy(f => f.Id)
-            .ToListAsync();
+        try
+        {
+            var testimonials = await _db.Feedbacks
+                .Where(f => f.Id >= 1 && f.Id <= 5)
+                .Include(f => f.User)
+                .OrderBy(f => f.Id)
+                .ToListAsync();
 
-        return View(testimonials);
+            return View(testimonials);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[AboutController.Index] Error: {ex.Message}");
+
+            return View("Index");
+        }
     }
 }

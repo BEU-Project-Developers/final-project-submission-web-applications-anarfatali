@@ -31,83 +31,85 @@ public class AdminController : Controller
     public async Task<IActionResult> AdminPanel()
     {
         ViewData["ActivePage"] = "Dashboard";
-        int totalUsers = await _db.Users.CountAsync();
-
-        int activeUsers = await _db.Users.CountAsync(u => u.EmailConfirmed);
-
-        var photographerRole = await _roleManager.FindByNameAsync("Photographer");
-        int photographersCount = 0;
-        if (photographerRole != null)
+        try
         {
-            photographersCount = await _db.UserRoles
-                .CountAsync(ur => ur.RoleId == photographerRole.Id);
-        }
+            int totalUsers = await _db.Users.CountAsync();
+            int activeUsers = await _db.Users.CountAsync(u => u.EmailConfirmed);
 
-        int pendingRequests = await _db.PhotographerRequests
-            .CountAsync(r => r.Status == "Pending");
-
-        int photosUploaded = await _db.Photos.CountAsync();
-
-        var recentActiveUsers = await _db.Users
-            .OrderByDescending(u => u.Id) // əgər Id artan ardıcıllıqdadırsa, yoxsa son login tarixinə görə OrderByDescending
-            .Select(u => new ActiveUserDto
+            var photographerRole = await _roleManager.FindByNameAsync("Photographer");
+            int photographersCount = 0;
+            if (photographerRole != null)
             {
-                Id = u.Id,
-                FullName = u.FullName, // Əgər ApplicationUser-də FullName sahəsi varsa
-                Email = u.Email,
-                Role = "", // Rolu sonra dolduraq
-                Status = u.EmailConfirmed ? "Active" : "Inactive",
-            })
-            .ToListAsync();
-
-        // İndi hər bir ActiveUserDto üçün rolu da alaq:
-        foreach (var au in recentActiveUsers)
-        {
-            var user = await _userManager.FindByIdAsync(au.Id);
-            if (user != null)
-            {
-                var roles = await _userManager.GetRolesAsync(user);
-                au.Role = roles.FirstOrDefault() ?? "User";
-
-                // Məsələn, LastActiveDisplay üçün əgər ApplicationUser-də LastLoginAt tərzi bir datetime sahəniz varsa,
-                // onu aşağıdakı kimi göstərə bilərsiniz:
-                // au.LastActiveDisplay = user.LastLoginAt?.ToString("g") ?? "N/A";
+                photographersCount = await _db.UserRoles
+                    .CountAsync(ur => ur.RoleId == photographerRole.Id);
             }
-        }
 
-        var pendingReqs = await _db.PhotographerRequests
-            .OrderByDescending(r => r.RequestedAt) // əgər SubmittedAt tarixi varsa
-            .ToListAsync();
+            int pendingRequests = await _db.PhotographerRequests
+                .CountAsync(r => r.Status == "Pending");
 
-        var photographerRequestsDto = new List<PhotographerRequestDto>();
-        foreach (var req in pendingReqs)
-        {
-            // req.UserId -> applicationUser Id-si
-            var user = await _userManager.FindByIdAsync(req.UserId);
-            photographerRequestsDto.Add(new PhotographerRequestDto
+            int photosUploaded = await _db.Photos.CountAsync();
+
+            var recentActiveUsers = await _db.Users
+                .OrderByDescending(u => u.Id)
+                .Select(u => new ActiveUserDto
+                {
+                    Id = u.Id,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    Role = "",
+                    Status = u.EmailConfirmed ? "Active" : "Inactive",
+                })
+                .ToListAsync();
+
+            foreach (var au in recentActiveUsers)
             {
-                Id = req.Id,
-                FullName = user?.FullName ?? "Unknown",
-                Email = user?.Email ?? "unknown@example.com",
-                Experience = req.Experience,
-                PortfolioLink = req.PortfolioUrl,
-                SubmittedDisplay = req.RequestedAt.ToString("MMM dd, yyyy HH:mm"),
-                Status = req.Status
-            });
+                var user = await _userManager.FindByIdAsync(au.Id);
+                if (user != null)
+                {
+                    var roles = await _userManager.GetRolesAsync(user);
+                    au.Role = roles.FirstOrDefault() ?? "User";
+                }
+            }
+
+            var pendingReqs = await _db.PhotographerRequests
+                .OrderByDescending(r => r.RequestedAt)
+                .ToListAsync();
+
+            var photographerRequestsDto = new List<PhotographerRequestDto>();
+            foreach (var req in pendingReqs)
+            {
+                var user = await _userManager.FindByIdAsync(req.UserId);
+                photographerRequestsDto.Add(new PhotographerRequestDto
+                {
+                    Id = req.Id,
+                    FullName = user?.FullName ?? "Unknown",
+                    Email = user?.Email ?? "unknown@example.com",
+                    Experience = req.Experience,
+                    PortfolioLink = req.PortfolioUrl,
+                    SubmittedDisplay = req.RequestedAt.ToString("MMM dd, yyyy HH:mm"),
+                    Status = req.Status
+                });
+            }
+
+            var vm = new AdminDashboardViewModel
+            {
+                TotalUsers = totalUsers,
+                ActiveUsers = activeUsers,
+                PhotographersCount = photographersCount,
+                PendingRequests = pendingRequests,
+                PhotosUploaded = photosUploaded,
+                ActiveUsersList = recentActiveUsers,
+                PhotographerRequests = photographerRequestsDto
+            };
+
+            return View(vm);
         }
-
-        var vm = new AdminDashboardViewModel
+        catch (Exception ex)
         {
-            TotalUsers = totalUsers,
-            ActiveUsers = activeUsers,
-            PhotographersCount = photographersCount,
-            PendingRequests = pendingRequests,
-            PhotosUploaded = photosUploaded,
-            ActiveUsersList = recentActiveUsers,
-            PhotographerRequests = photographerRequestsDto
-        };
-
-        return View(vm);
+            Console.WriteLine($"[AdminController.AdminPanel] Error: {ex.Message}");
+            ViewBag.ErrorMessage = "Something went wrong!.";
+            return View();
+        }
     }
 
 
@@ -200,32 +202,28 @@ public class AdminController : Controller
 
         var model = new AdminDashboardViewModel();
 
-        // 2) Load all users who have the "Photographer" role
         var photographersInRole = await _userManager.GetUsersInRoleAsync("Photographer");
 
         var photographerDtos = new List<PhotographerDto>();
 
         foreach (var user in photographersInRole)
         {
-            // 3) Find the approved PhotographerRequest (if any) to get Experience
             var request = await _db.PhotographerRequests
                 .Where(r => r.UserId == user.Id && r.Status == "Approved")
                 .FirstOrDefaultAsync();
 
             string experience = request?.Experience ?? "0-1";
 
-            // 4) Count how many photos this user has uploaded
             int photoCount = await _db.Photos
                 .CountAsync(p => p.PhotographerId == user.Id);
 
-            // 5) Determine status (Active if email is confirmed)
             string status = user.EmailConfirmed ? "Active" : "Inactive";
 
             photographerDtos.Add(new PhotographerDto
             {
                 Id = user.Id,
-                FullName = string.IsNullOrEmpty(user.FullName) 
-                    ? user.UserName 
+                FullName = string.IsNullOrEmpty(user.FullName)
+                    ? user.UserName
                     : user.FullName,
                 Email = user.Email,
                 Experience = experience,
@@ -234,51 +232,55 @@ public class AdminController : Controller
             });
         }
 
-        // 6) Assign the list into our AdminDashboardViewModel
         model.Photographers = photographerDtos;
-
-        // (If you also want to fill other properties—like ActiveUsers, TotalUsers, etc.—do so here.)
 
         return View(model);
     }
-    
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteUser(string id)
     {
-        if (string.IsNullOrEmpty(id))
-            return NotFound();
-
-        var user = await _userManager.FindByIdAsync(id);
-        if (user == null)
-            return NotFound();
-
-        var messages = _db.ContactMessages.Where(cm => cm.ApplicationUserId == user.Id);
-        _db.ContactMessages.RemoveRange(messages);
-
-        var feedbacks = _db.Feedbacks.Where(fb => fb.UserId == user.Id);
-        _db.Feedbacks.RemoveRange(feedbacks);
-
-        var galleries = _db.Galleries.Where(g => g.UserId == user.Id);
-        _db.Galleries.RemoveRange(galleries);
-
-        var requests = _db.PhotographerRequests.Where(r => r.UserId == user.Id);
-        _db.PhotographerRequests.RemoveRange(requests);
-
-        await _db.SaveChangesAsync();
-
-        var identityResult = await _userManager.DeleteAsync(user);
-        if (!identityResult.Succeeded)
+        try
         {
-            // You could add ModelState errors or show a flash message here.
-            // For now, just redirect back with an error
-            foreach (var error in identityResult.Errors)
-            {
-                ModelState.AddModelError("", error.Description);
-            }
-            return RedirectToAction("Users");
-        }
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+                return NotFound();
 
-        return RedirectToAction("AdminPanel");  
+            var messages = _db.ContactMessages.Where(cm => cm.ApplicationUserId == user.Id);
+            _db.ContactMessages.RemoveRange(messages);
+
+            var feedbacks = _db.Feedbacks.Where(fb => fb.UserId == user.Id);
+            _db.Feedbacks.RemoveRange(feedbacks);
+
+            var galleries = _db.Galleries.Where(g => g.UserId == user.Id);
+            _db.Galleries.RemoveRange(galleries);
+
+            var requests = _db.PhotographerRequests.Where(r => r.UserId == user.Id);
+            _db.PhotographerRequests.RemoveRange(requests);
+
+            await _db.SaveChangesAsync();
+
+            var identityResult = await _userManager.DeleteAsync(user);
+            if (!identityResult.Succeeded)
+            {
+                foreach (var error in identityResult.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+
+                TempData["ErrorMessage"] = "Can't delete user.";
+                return RedirectToAction("Users");
+            }
+
+            TempData["SuccessMessage"] = "User deleted successfully.";
+            return RedirectToAction("AdminPanel");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[AdminController.DeleteUser] Error: {ex.Message}");
+            TempData["ErrorMessage"] = "Something went wrong. Please try again.";
+            return RedirectToAction("AdminPanel");
+        }
     }
 }

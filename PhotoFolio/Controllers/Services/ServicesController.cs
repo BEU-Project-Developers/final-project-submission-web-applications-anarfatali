@@ -15,10 +15,19 @@ public class ServicesController : Controller
     public IActionResult Index()
     {
         this.ViewData["ActivePage"] = "Services";
-        var feedbacks = _db.Feedbacks
-            .Where(f => f.Id >= 6 && f.Id <= 10)
-            .ToList();
+        try
+        {
+            var feedbacks = _db.Feedbacks
+                .Where(f => f.Id >= 6 && f.Id <= 10)
+                .ToList();
 
-        return View(feedbacks);
+            return View(feedbacks);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ServicesController.Index] Error: {ex.Message}");
+            ViewBag.ErrorMessage = ex.Message;
+            return View();
+        }
     }
 }

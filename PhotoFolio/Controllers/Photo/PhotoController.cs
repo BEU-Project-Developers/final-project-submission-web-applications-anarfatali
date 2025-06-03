@@ -40,13 +40,11 @@ public class PhotoController : Controller
             return RedirectToAction(nameof(ApplyPhotographer));
         }
 
-        // (c) User IS a Photographer, so fetch all of that user’s photos:
         var photosForUser = await _db.Photos
             .Where(p => p.PhotographerId == user.Id)
             .OrderByDescending(p => p.UploadedAt)
             .ToListAsync();
 
-        // Return Upload.cshtml, model = List<Photo>
         return View("Upload", photosForUser);
     }
 
@@ -89,7 +87,7 @@ public class PhotoController : Controller
             return View("Upload", existing);
         }
 
-        var allowedContentTypes = new[] { "image/jpeg", "image/png", "image/gif" , "image/jpg"};
+        var allowedContentTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/jpg" };
 
         foreach (var file in files)
         {
@@ -117,13 +115,13 @@ public class PhotoController : Controller
                 await file.CopyToAsync(ms);
                 data = ms.ToArray();
             }
-            
+
             var uploadsRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
             if (!Directory.Exists(uploadsRoot))
             {
                 Directory.CreateDirectory(uploadsRoot);
             }
-            
+
             var uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
             var filePath = Path.Combine(uploadsRoot, uniqueFileName);
 
@@ -131,7 +129,7 @@ public class PhotoController : Controller
             {
                 await file.CopyToAsync(stream);
             }
-            
+
             var random = new Random();
             var categoryId = random.Next(1, 7);
 
@@ -196,9 +194,6 @@ public class PhotoController : Controller
         return RedirectToAction(nameof(ApplyPhotographer));
     }
 
-    // 7) GET: Bir fotoğrafı tarayıcıya FileResult olarak döner. 
-    //    <img src="@Url.Action("GetImage", new { id = photo.Id })" ... />
-    //
     [AllowAnonymous]
     [HttpGet]
     public IActionResult GetImage(int id)
