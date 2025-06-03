@@ -161,13 +161,6 @@ public class PhotoController : Controller
         return View("Request", new PhotographerApplicationViewModel());
     }
 
-    //
-    // 3) POST: Photographer başvuru formu gönderildiğinde burası tetiklenir.
-    //    (a) Model doğrulaması yaparız.
-    //    (b) Demo amaçlı, kullanıcıya Photographer rolü hemen verilir.
-    //    (c) Cookie güncellemesi için RefreshSignInAsync çağrılır.
-    //    (d) Tekrar Upload aksiyonuna yönlendiririz.
-    //
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ApplyPhotographer(PhotographerApplicationViewModel vm)
@@ -193,7 +186,7 @@ public class PhotoController : Controller
             Experience = vm.Experience,
             PortfolioUrl = vm.PortfolioUrl,
             RequestedAt = DateTime.UtcNow,
-            IsApproved = false
+            Status = "Pending"
         };
 
         _db.PhotographerRequests.Add(request);

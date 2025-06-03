@@ -247,6 +247,7 @@ namespace PhotoFolio.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ApplicationUserId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
@@ -259,14 +260,16 @@ namespace PhotoFolio.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTime>("SentAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Subject")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.HasKey("Id");
 
@@ -405,33 +408,33 @@ namespace PhotoFolio.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime?>("ApprovedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ApprovedByUserId")
-                        .HasColumnType("text");
-
                     b.Property<string>("Experience")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("boolean");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("PortfolioUrl")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime>("RequestedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
                     b.Property<string>("Surname")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -497,9 +500,13 @@ namespace PhotoFolio.Migrations
 
             modelBuilder.Entity("PhotoFolio.Models.ContactMessage", b =>
                 {
-                    b.HasOne("PhotoFolio.Models.ApplicationUser", null)
+                    b.HasOne("PhotoFolio.Models.ApplicationUser", "User")
                         .WithMany("ContactMessages")
-                        .HasForeignKey("ApplicationUserId");
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("PhotoFolio.Models.Feedback", b =>
